@@ -1,3 +1,7 @@
+// sketch.js - Experiment 2 code for making Moire Patterns 
+// Author: Evan Lake
+// Date: 1/22/2024
+
 let SizeX = 1200;
 let SizeY = 600;
 let SizeH = 0;
@@ -120,6 +124,7 @@ function makeWaveyGrid(gSize, period, curveLen, x, y) {
 }
 
 // This code sourced from :https://www.fwait.com/how-to-disable-scrolling-with-arrow-keys-in-javascript/
+//[
 document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowLeft":
@@ -130,6 +135,7 @@ document.addEventListener("keydown", (e) => {
       break;
   }
 });
+//]
 
 let angRad = foreAngle * Math.PI/180;
 let foreHyp = Math.sqrt(forePeriod*forePeriod * 2);
@@ -140,8 +146,6 @@ function getInput() {
   if (keyIsDown(RIGHT_ARROW)) {
     if (foreGridType == 0) {
       foreShiftX = (foreShiftX + 1) % (6*(lerp(forePeriod,foreHyp,(Math.abs(foreAngle)/45))));
-      //print(((lerp(forePeriod,foreHyp,(Math.abs(foreAngle)/45)))));
-      //print((Math.abs(forePeriod*Math.cos(angRad)) + Math.abs(forePeriod*Math.sin(angRad))));
     } 
     else if (foreGridType == 1) foreMoveX = (foreMoveX + 2) % SizeX;
     else if (foreGridType == 2) {
@@ -218,26 +222,5 @@ function keyPressed() {
       if (foreWeight >= 3) foreWeight = (foreWeight - 1);
       else foreWeight = 6;
     }
-  
-  // foreColor
-  /*
-  if (key == 'e') { // key 'c'
-    if( foreColor == red) {
-      foreColor = green;
-    } else if (foreColor == green) {
-      foreColor = blue;
-    } else if (foreColor == blue) {
-      foreColor = red;
-    }
-  }
-  if (key == 'd') { // key 'c'
-    if( backColor == red) {
-      backColor = green;
-    } else if (foreColor == green) {
-      backColor = blue;
-    } else if (foreColor == blue) {
-      backColor = red;
-    } 
-  }*/
   
   }

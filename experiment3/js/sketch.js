@@ -25,6 +25,16 @@ class MyClass {
     }
 }
 
+
+let angle = 25;
+let gen = 0;
+let axiom = "F";
+let sentence = axiom;
+let mybutton;
+let len = 100
+let cvs;
+let output;
+
 // setup() function is called once when the program starts
 function setup() {
     // place our canvas, making it fit our container
@@ -41,27 +51,86 @@ function setup() {
 
     var centerHorz = windowWidth / 2;
     var centerVert = windowHeight / 2;
+
+    background(0);
+
+    angleMode(DEGREES);
+    stroke(0, 255, 0, 100);
+    //noCanvas();
+    mybutton = select("#button");
+    mybutton.mousePressed(generate);
+    output = select('#output');
+    output.html(axiom);
+    //translate(width/2,height);
+    turtle();
 }
 
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-    background(220);    
+    //background(220);    
     // call a method on the instance
-    myInstance.myMethod();
+    //myInstance.myMethod();
 
     // Put drawings here
-    var centerHorz = canvasContainer.width() / 2 - 125;
-    var centerVert = canvasContainer.height() / 2 - 125;
-    fill(234, 31, 81);
-    noStroke();
-    rect(centerHorz, centerVert, 250, 250);
-    fill(255);
-    textStyle(BOLD);
-    textSize(140);
-    text("p5*", centerHorz + 10, centerVert + 200);
 }
 
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
-}
+function generate() {
+    console.log(gen);
+    if (gen < 5) { // only 5 generations
+      len *= 0.5;
+      gen++
+      //len *=0.618;
+      let nextsentence = "";
+      for (let i = 0; i < sentence.length; i++) {
+        let current = sentence.charAt(i); // get char in sentence
+        // simple rule with an if then else
+        if (current === 'F') { // if 'F' make substitution
+          nextsentence += "FF+[+F-F-F]-[-F+F+F]";
+        } else { // else just append the terminal character +-[]
+          nextsentence += current;
+        }
+      }
+      sentence = nextsentence // 
+      output.html(sentence);
+      turtle();
+  
+    } else { // reset the tree and sentence, get random angle, call turtle 
+      gen = 0;
+      sentence = "F";
+      output.html(sentence);
+      len = 100;
+      angle = random(-60, 60);
+      turtle();
+    }
+  }
+  
+  function turtle() {
+    background(0);
+    resetMatrix(); // need to reset the matrix each time through
+    translate(width / 2, height);
+    for (let i = 0; i < sentence.length; i++) {
+      let current = sentence.charAt(i); // get char in sentence
+  
+      switch (current) {
+        case "F":
+          let alp = map(gen, 0, 5, 255, 50); // mapping the alpha
+  
+          stroke(0, 255, 0, alp);
+          line(0, 0, 0, -len); // line from origin up
+          translate(0, -len); // move to the end of the line
+          break;
+        case "+":
+          rotate(angle); //PI/6
+          break;
+        case "-":
+          rotate(-angle); //PI/6
+          break;
+        case "[":
+          push();
+          break;
+        case "]":
+          pop();
+          break;
+      }
+    }
+  }

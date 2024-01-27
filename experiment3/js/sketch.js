@@ -28,12 +28,17 @@ class MyClass {
 
 let angle = 25;
 let gen = 0;
-let axiom = "F";
+let axiom = "TFH";
 let sentence = axiom;
 let mybutton;
-let len = 100
+let len = 500;
 let cvs;
 let output;
+let startX;
+let startY;
+let endX;
+let endY;
+let segs = 3;
 
 // setup() function is called once when the program starts
 function setup() {
@@ -62,6 +67,7 @@ function setup() {
     output = select('#output');
     output.html(axiom);
     //translate(width/2,height);
+    len = width/2;
     turtle();
 }
 
@@ -77,48 +83,74 @@ function draw() {
 function generate() {
     console.log(gen);
     if (gen < 5) { // only 5 generations
-      len *= 0.5;
+      
       gen++
-      //len *=0.618;
+      //len *=0.618;+
       let nextsentence = "";
       for (let i = 0; i < sentence.length; i++) {
         let current = sentence.charAt(i); // get char in sentence
         // simple rule with an if then else
         if (current === 'F') { // if 'F' make substitution
-          nextsentence += "FF+[+F-F-F]-[-F+F+F]";
+          //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
+          nextsentence += "FF+F+F+F";
+          segs += 4;
+        } else if(current === 'T') {
+            nextsentence += "TF";
+            segs++;
         } else { // else just append the terminal character +-[]
           nextsentence += current;
         }
       }
       sentence = nextsentence // 
       output.html(sentence);
+      
       turtle();
   
     } else { // reset the tree and sentence, get random angle, call turtle 
       gen = 0;
-      sentence = "F";
+      sentence = axiom;
+      segs = 3;
       output.html(sentence);
-      len = 100;
       angle = random(-60, 60);
       turtle();
     }
+    
+    
   }
   
   function turtle() {
+    let curLen = len/segs;
+    print("segments: " + segs);
+    print("of Length: " + curLen);
     background(0);
     resetMatrix(); // need to reset the matrix each time through
-    translate(width / 2, height);
+    translate(width / 4, height);
+    push();
     for (let i = 0; i < sentence.length; i++) {
       let current = sentence.charAt(i); // get char in sentence
   
       switch (current) {
         case "F":
-          let alp = map(gen, 0, 5, 255, 50); // mapping the alpha
+          let alp1 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
-          stroke(0, 255, 0, alp);
-          line(0, 0, 0, -len); // line from origin up
-          translate(0, -len); // move to the end of the line
+          stroke(0, 255, 0, alp1);
+          line(0, 0, 0, -curLen); // line from origin up
+          translate(0, -curLen); // move to the end of the line
           break;
+        case "T":
+            let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
+    
+            stroke(100, 100, 0, alp2);
+            line(0, 0, 0, -curLen); // line from origin up
+            translate(0, -curLen); // move to the end of the line
+            break;
+        case "H":
+            let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
+    
+            stroke(200, 255, 200, alp3);
+            line(0, 0, 0, -curLen); // line from origin up
+            translate(0, -curLen); // move to the end of the line
+            break;
         case "+":
           rotate(angle); //PI/6
           break;
@@ -133,4 +165,5 @@ function generate() {
           break;
       }
     }
+    pop();
   }

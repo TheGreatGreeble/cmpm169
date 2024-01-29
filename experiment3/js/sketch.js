@@ -32,6 +32,7 @@ let axiom = "TSH";
 let sentence = axiom;
 let mybutton;
 let len = 500;
+let netLen;
 let cvs;
 let output;
 let startX;
@@ -41,6 +42,7 @@ let endX;
 let endY;
 let endAng;
 let segs = 3;
+let girth = 50;
 
 // setup() function is called once when the program starts
 function setup() {
@@ -69,15 +71,16 @@ function setup() {
     output = select('#output');
     output.html(axiom);
     //translate(width/2,height);
-    len = width/2;
-    startX = width/4;
-    startY = height - height/4;
-    startAng = -60;
+    netLen = width - (girth*4);
+    len = netLen;
+    startX = girth*2;
+    startY = height/2;
+    startAng = 90;
     color1 = color(6, 80, 80);
     color2 = color(0, 0, 0);
     //noLoop(); // Redraw only once
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x+=2) {
+      for (let y = 0; y < height; y+=3) {
         // Use the noise() function to generate a Perlin noise value for each pixel
         let noiseValue = noise(x * 0.01, y * 0.01) * 2 - 1; // Normalize noise to a range of -1 to 1
         
@@ -144,6 +147,8 @@ function generate() {
   
   function turtle() {
     updatePixels();
+    let west = 90
+    let curSeg = 0;
     let curLen = len/segs;
     let curAng = 330/segs;
     let angRot = 0;
@@ -152,6 +157,7 @@ function generate() {
     resetMatrix(); // need to reset the matrix each time through
     translate(startX, startY);
     rotate(startAng);
+    west -= startAng;
     push();
     for (let i = 0; i < sentence.length; i++) {
       let current = sentence.charAt(i); // get char in sentence
@@ -163,7 +169,7 @@ function generate() {
           stroke(100, 100, 0, alp2);
           line(0, 0, 0, -curLen); // line from origin up
           translate(0, -curLen); // move to the end of the line
-          rotate(curAng);
+          //rotate(curAng);
           break;
         case "H":
           let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
@@ -171,7 +177,7 @@ function generate() {
           stroke(200, 255, 200, alp3);
           line(0, 0, 0, -curLen); // line from origin up
           translate(0, -curLen); // move to the end of the line
-          rotate(curAng);
+          //rotate(curAng);
           break;
         case "S":
           let alp1 = map(gen, 0, 5, 255, 50); // mapping the alpha
@@ -179,23 +185,25 @@ function generate() {
           stroke(0, 255, 0, alp1);
           line(0, 0, 0, -curLen); // line from origin up
           translate(0, -curLen); // move to the end of the line
-          rotate(curAng);
+          //rotate(curAng);
           break;
-        case "R":
+        case "C":
           let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(255, 100, 10, alp4);
           line(0, 0, 0, -curLen); // line from origin up
           translate(0, -curLen); // move to the end of the line
-          rotate(curAng);
+          //rotate(curAng);
           break;
         case "+":
-          angRot = round(random(0,90));
-          rotate(angRot);
+          //angRot = round(random(-90,90));
+          rotate(45);
+          west -= 45;
           break;
         case "-":
-          angRot = round(random(-90,0));
-          rotate(angRot);
+          //angRot = round(random(-90,90));
+          rotate(-45);
+          west -= -45;
           break;
         case "[":
           push();

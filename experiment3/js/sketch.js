@@ -119,16 +119,16 @@ function generate() {
         // simple rule with an if then else
         if (current === 'S') { // if 'F' make substitution
           //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
-          nextsentence += "+SS--SS+";
-          segs += 3;
+          nextsentence += "+S--S+";
+          segs += 1;
         } else if(current === 'T') {
             nextsentence += "TS";
             segs++;
         } else if(current === '+') {
-          nextsentence += "+S--S";
+          nextsentence += "+S--S+";
           segs+=2;
         } else if(current === '-') {
-          nextsentence += "-S++S";
+          nextsentence += "-S++S-";
           segs+=2;
       } else { // else just append the terminal character +-[]
           nextsentence += current;
@@ -154,8 +154,10 @@ function generate() {
   function turtle() {
     updatePixels();
     let west = 90
+    let is45 = false;
     let curSeg = 0;
     let curLen = len/segs;
+    let cur45Len = curLen * Math.sqrt(2);
     let curAng = 330/segs;
     let angRot = 0;
     print("segments: " + segs);
@@ -173,43 +175,52 @@ function generate() {
           let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(100, 100, 0, alp2);
-          line(0, 0, 0, -curLen); // line from origin up
-          translate(0, -curLen); // move to the end of the line
+          if (is45) {
+            line(0, 0, 0, -cur45Len); // line from origin up
+            translate(0, -cur45Len); // move to the end of the line
+          } else {
+            line(0, 0, 0, -curLen); // line from origin up
+            translate(0, -curLen); // move to the end of the line
+          }
           //rotate(curAng);
           break;
         case "H":
           let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(200, 255, 200, alp3);
-          line(0, 0, 0, -curLen); // line from origin up
-          translate(0, -curLen); // move to the end of the line
+          if (is45) {
+            line(0, 0, 0, -cur45Len); // line from origin up
+            translate(0, -cur45Len); // move to the end of the line
+          } else {
+            line(0, 0, 0, -curLen); // line from origin up
+            translate(0, -curLen); // move to the end of the line
+          }
           //rotate(curAng);
           break;
         case "S":
           let alp1 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(0, 255, 0, alp1);
-          line(0, 0, 0, -curLen); // line from origin up
-          translate(0, -curLen); // move to the end of the line
-          //rotate(curAng);
-          break;
-        case "C":
-          let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
-  
-          stroke(255, 100, 10, alp4);
-          line(0, 0, 0, -curLen); // line from origin up
-          translate(0, -curLen); // move to the end of the line
+          if (is45) {
+            line(0, 0, 0, -cur45Len); // line from origin up
+            translate(0, -cur45Len); // move to the end of the line
+          } else {
+            line(0, 0, 0, -curLen); // line from origin up
+            translate(0, -curLen); // move to the end of the line
+          }
           //rotate(curAng);
           break;
         case "+":
           //angRot = round(random(-90,90));
           rotate(45);
           west -= 45;
+          is45 = !is45;
           break;
         case "-":
           //angRot = round(random(-90,90));
           rotate(-45);
           west -= -45;
+          is45 = !is45;
           break;
         case "[":
           push();

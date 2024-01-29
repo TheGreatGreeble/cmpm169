@@ -41,7 +41,7 @@ let startAng;
 let endX;
 let endY;
 let endAng;
-let segs = 3;
+let segs = 1;
 let girth = 50;
 
 // setup() function is called once when the program starts
@@ -119,17 +119,31 @@ function generate() {
         // simple rule with an if then else
         if (current === 'S') { // if 'F' make substitution
           //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
-          nextsentence += "+S--S+";
+          if (random(-1,1) > 0) {
+            nextsentence += "+RL--LR+";
+          } else {
+            nextsentence += "+LR--RL+";
+          }
+          segs += 3;
+        } else if(current === 'K') {
+          if (random(-1,1) > 0) {
+            nextsentence += "-L++L-";
+          } else {
+            nextsentence += "-R++R-";
+          }
           segs += 1;
-        } else if(current === 'T') {
-            nextsentence += "TS";
-            segs++;
+        } else if(current === 'R') {
+          nextsentence += "+K++S++K++S+";
+          segs+=0;
+        } else if(current === 'L') {
+          nextsentence += "-S--K--K--S-";
+          segs+=0;
         } else if(current === '+') {
-          nextsentence += "+S--S+";
-          segs+=2;
+          nextsentence += "+SK-KS+";
+          segs+=4;
         } else if(current === '-') {
-          nextsentence += "-S++S-";
-          segs+=2;
+          nextsentence += "-SK+KS-";
+          segs+=4;
       } else { // else just append the terminal character +-[]
           nextsentence += current;
         }
@@ -198,9 +212,11 @@ function generate() {
           //rotate(curAng);
           break;
         case "S":
-          let alp1 = map(gen, 0, 5, 255, 50); // mapping the alpha
+        case "K":
+        case "R":
+          let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
-          stroke(0, 255, 0, alp1);
+          stroke(0, 255, 0, alp4);
           if (is45) {
             line(0, 0, 0, -cur45Len); // line from origin up
             translate(0, -cur45Len); // move to the end of the line

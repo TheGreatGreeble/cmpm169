@@ -36,8 +36,10 @@ let cvs;
 let output;
 let startX;
 let startY;
+let startAng;
 let endX;
 let endY;
+let endAng;
 let segs = 3;
 
 // setup() function is called once when the program starts
@@ -67,7 +69,10 @@ function setup() {
     output = select('#output');
     output.html(axiom);
     //translate(width/2,height);
-    len = width/2;
+    len = width;
+    startX = width/4;
+    startY = height;
+    startAng = -45;
     turtle();
 }
 
@@ -92,7 +97,7 @@ function generate() {
         // simple rule with an if then else
         if (current === 'F') { // if 'F' make substitution
           //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
-          nextsentence += "FF+F+F+F";
+          nextsentence += "FFFFF";
           segs += 4;
         } else if(current === 'T') {
             nextsentence += "TF";
@@ -120,11 +125,13 @@ function generate() {
   
   function turtle() {
     let curLen = len/segs;
+    let curAng = 270/segs;
     print("segments: " + segs);
     print("of Length: " + curLen);
     background(0);
     resetMatrix(); // need to reset the matrix each time through
-    translate(width / 4, height);
+    translate(startX, startY);
+    rotate(startAng);
     push();
     for (let i = 0; i < sentence.length; i++) {
       let current = sentence.charAt(i); // get char in sentence
@@ -136,6 +143,7 @@ function generate() {
           stroke(0, 255, 0, alp1);
           line(0, 0, 0, -curLen); // line from origin up
           translate(0, -curLen); // move to the end of the line
+          rotate(curAng);
           break;
         case "T":
             let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
@@ -143,6 +151,7 @@ function generate() {
             stroke(100, 100, 0, alp2);
             line(0, 0, 0, -curLen); // line from origin up
             translate(0, -curLen); // move to the end of the line
+            rotate(curAng);
             break;
         case "H":
             let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
@@ -150,6 +159,7 @@ function generate() {
             stroke(200, 255, 200, alp3);
             line(0, 0, 0, -curLen); // line from origin up
             translate(0, -curLen); // move to the end of the line
+            rotate(curAng);
             break;
         case "+":
           rotate(angle); //PI/6

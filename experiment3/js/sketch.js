@@ -28,7 +28,7 @@ class MyClass {
 
 let angle = 25;
 let gen = 0;
-let axiom = "TFH";
+let axiom = "TSH";
 let sentence = axiom;
 let mybutton;
 let len = 500;
@@ -69,10 +69,29 @@ function setup() {
     output = select('#output');
     output.html(axiom);
     //translate(width/2,height);
-    len = width;
+    len = width/2;
     startX = width/4;
-    startY = height;
-    startAng = -45;
+    startY = height - height/4;
+    startAng = -60;
+    color1 = color(6, 80, 80);
+    color2 = color(0, 0, 0);
+    //noLoop(); // Redraw only once
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        // Use the noise() function to generate a Perlin noise value for each pixel
+        let noiseValue = noise(x * 0.01, y * 0.01) * 2 - 1; // Normalize noise to a range of -1 to 1
+        
+        // Interpolate between color1 and color2 based on the noise value
+        let blendedColor = lerpColor(color1, color2, (noiseValue + 1) / 2);
+        
+        // Set the pixel color
+        set(x, y, blendedColor);
+      }
+    }
+    
+    // Update the canvas to reflect the changes
+    updatePixels();
+
     turtle();
 }
 
@@ -95,12 +114,12 @@ function generate() {
       for (let i = 0; i < sentence.length; i++) {
         let current = sentence.charAt(i); // get char in sentence
         // simple rule with an if then else
-        if (current === 'F') { // if 'F' make substitution
+        if (current === 'S') { // if 'F' make substitution
           //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
-          nextsentence += "FFFFF";
-          segs += 4;
+          nextsentence += "+S--S";
+          segs += 2;
         } else if(current === 'T') {
-            nextsentence += "TF";
+            nextsentence += "TS";
             segs++;
         } else { // else just append the terminal character +-[]
           nextsentence += current;
@@ -124,11 +143,12 @@ function generate() {
   }
   
   function turtle() {
+    updatePixels();
     let curLen = len/segs;
-    let curAng = 270/segs;
+    let curAng = 330/segs;
+    let angRot = 0;
     print("segments: " + segs);
     print("of Length: " + curLen);
-    background(0);
     resetMatrix(); // need to reset the matrix each time through
     translate(startX, startY);
     rotate(startAng);
@@ -137,7 +157,23 @@ function generate() {
       let current = sentence.charAt(i); // get char in sentence
   
       switch (current) {
-        case "F":
+        case "T":
+          let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
+  
+          stroke(100, 100, 0, alp2);
+          line(0, 0, 0, -curLen); // line from origin up
+          translate(0, -curLen); // move to the end of the line
+          rotate(curAng);
+          break;
+        case "H":
+          let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
+  
+          stroke(200, 255, 200, alp3);
+          line(0, 0, 0, -curLen); // line from origin up
+          translate(0, -curLen); // move to the end of the line
+          rotate(curAng);
+          break;
+        case "S":
           let alp1 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(0, 255, 0, alp1);
@@ -145,27 +181,21 @@ function generate() {
           translate(0, -curLen); // move to the end of the line
           rotate(curAng);
           break;
-        case "T":
-            let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
-    
-            stroke(100, 100, 0, alp2);
-            line(0, 0, 0, -curLen); // line from origin up
-            translate(0, -curLen); // move to the end of the line
-            rotate(curAng);
-            break;
-        case "H":
-            let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
-    
-            stroke(200, 255, 200, alp3);
-            line(0, 0, 0, -curLen); // line from origin up
-            translate(0, -curLen); // move to the end of the line
-            rotate(curAng);
-            break;
+        case "R":
+          let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
+  
+          stroke(255, 100, 10, alp4);
+          line(0, 0, 0, -curLen); // line from origin up
+          translate(0, -curLen); // move to the end of the line
+          rotate(curAng);
+          break;
         case "+":
-          rotate(angle); //PI/6
+          angRot = round(random(0,90));
+          rotate(angRot);
           break;
         case "-":
-          rotate(-angle); //PI/6
+          angRot = round(random(-90,0));
+          rotate(angRot);
           break;
         case "[":
           push();

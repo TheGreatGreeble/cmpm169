@@ -41,7 +41,7 @@ let startAng;
 let endX;
 let endY;
 let endAng;
-let segs = 1;
+let segs = 3;
 let girth = 50;
 
 // setup() function is called once when the program starts
@@ -117,33 +117,34 @@ function generate() {
       for (let i = 0; i < sentence.length; i++) {
         let current = sentence.charAt(i); // get char in sentence
         // simple rule with an if then else
-        if (current === 'S') { // if 'F' make substitution
-          //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
+        if (current === 'S') { // if 'S' make substitution
           if (random(-1,1) > 0) {
-            nextsentence += "+RL--LR+";
+            nextsentence += "LSK";
           } else {
-            nextsentence += "+LR--RL+";
+            nextsentence += "KSL";
           }
-          segs += 3;
+          segs += 2;
         } else if(current === 'K') {
           if (random(-1,1) > 0) {
-            nextsentence += "-L++L-";
+            nextsentence += "--S++S--S++";
           } else {
-            nextsentence += "-R++R-";
+            nextsentence += "++S--S++S--";
           }
-          segs += 1;
-        } else if(current === 'R') {
-          nextsentence += "+K++S++K++S+";
-          segs+=0;
+          segs += 2;
         } else if(current === 'L') {
-          nextsentence += "-S--K--K--S-";
-          segs+=0;
+          if (random(-1,1) > 0) {
+            nextsentence += "-SS--S--S--SS-";
+          } else {
+            nextsentence += "+SS++S++S++SS+";
+          }
+          
+          segs+=3;
         } else if(current === '+') {
-          nextsentence += "+SK-KS+";
-          segs+=4;
+          nextsentence += "+";
+          segs+=0;
         } else if(current === '-') {
-          nextsentence += "-SK+KS-";
-          segs+=4;
+          nextsentence += "-";
+          segs+=0;
       } else { // else just append the terminal character +-[]
           nextsentence += current;
         }
@@ -213,7 +214,7 @@ function generate() {
           break;
         case "S":
         case "K":
-        case "R":
+        case "L":
           let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(0, 255, 0, alp4);

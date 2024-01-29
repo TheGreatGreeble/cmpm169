@@ -119,12 +119,18 @@ function generate() {
         // simple rule with an if then else
         if (current === 'S') { // if 'F' make substitution
           //nextsentence += "FF-[-F+F+F]+[+F-F-F]";
-          nextsentence += "+S--S";
-          segs += 2;
+          nextsentence += "+SS--SS+";
+          segs += 3;
         } else if(current === 'T') {
             nextsentence += "TS";
             segs++;
-        } else { // else just append the terminal character +-[]
+        } else if(current === '+') {
+          nextsentence += "+S--S";
+          segs+=2;
+        } else if(current === '-') {
+          nextsentence += "-S++S";
+          segs+=2;
+      } else { // else just append the terminal character +-[]
           nextsentence += current;
         }
       }

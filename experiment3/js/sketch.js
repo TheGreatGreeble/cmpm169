@@ -42,7 +42,7 @@ let endX;
 let endY;
 let endAng;
 let segs = 3;
-let girth = 50;
+let girth = 10;
 
 // setup() function is called once when the program starts
 function setup() {
@@ -173,8 +173,8 @@ function generate() {
     let segLen = len/segs; // segment length
     let seg45Len = segLen * Math.sqrt(2);
     let curXSeg = 0;
-    let netXLenGoal = Math.floor(segLen); // total number of segments needed to reach ~length 
     let netXLen = 0;
+    let netYPos = startY;
     print("segments: " + segs);
     print("of Length: " + segLen);
     resetMatrix(); // need to reset the matrix each time through
@@ -182,6 +182,7 @@ function generate() {
     rotate(startAng);
     let curDir = 0;
     //curPoint.Add(startX,startY,startAng);
+    strokeWeight(girth);
 
     push();
     for (let i = 0; i < sentence.length; i++) {
@@ -189,12 +190,61 @@ function generate() {
   
       switch (current) {
         case "T":
-          let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
-          stroke(100, 100, 0, alp2);
+          stroke(100, 100, 0);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
 
+          
+          stroke(10,10,255);
+          //compensate for y direction
+          if (-4 < curDir && curDir < 0) {
+            // if going down
+            netYPos -= segLen;
+            if (netYPos > height*3/4) {
+              // if we are above bounceback line and going down
+              // extend down 1 seg
+              if (curDir == -1) {
+                rotate(-45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(45);
+              } else if (curDir == -3) {
+                rotate(45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(-45);
+              } else if (curDir == -2) {
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+              }
+              netYPos -= segLen;
+            }
+          } else if (4 > curDir && curDir > 0) {
+            // if going up
+            netYPos += segLen;
+            if (netYPos < height/4) {
+              // if we are below bounceback line and going up
+              // extend up 1 seg
+              if (curDir == 1) {
+                rotate(45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(-45);
+              } else if (curDir == 3) {
+                rotate(-45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(45);
+              } else if (curDir == 2) {
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+              }
+              netYPos += segLen;
+            }
+          }
+
+          // compensate for x direction
           if (Math.abs(curDir) < 2) {
             curXSeg++;
             netXLen++;
@@ -211,16 +261,61 @@ function generate() {
             curXSeg++;
             //netXLen--;
 
-          } else {
-            // if going up or down
           }
           break;
         case "H":
-          let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
           
-          stroke(200, 255, 200, alp3);
+          stroke(200, 255, 200);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+
+          //compensate for y direction
+          stroke(10,10,255);
+          if (-4 < curDir && curDir < 0) {
+            // if going down
+            netYPos -= segLen;
+            if (netYPos > height*3/4) {
+              // if we are above bounceback line and going down
+              // extend down 1 seg
+              if (curDir == -1) {
+                rotate(-45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(45);
+              } else if (curDir == -3) {
+                rotate(45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(-45);
+              } else if (curDir == -2) {
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+              }
+              netYPos -= segLen;
+            }
+          } else if (4 > curDir && curDir > 0) {
+            // if going up
+            netYPos += segLen;
+            if (netYPos < height/4) {
+              // if we are below bounceback line and going up
+              // extend up 1 seg
+              if (curDir == 1) {
+                rotate(45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(-45);
+              } else if (curDir == 3) {
+                rotate(-45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(45);
+              } else if (curDir == 2) {
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+              }
+              netYPos += segLen;
+            }
+          }
 
           if (Math.abs(curDir) < 2) {
             curXSeg++;
@@ -245,11 +340,58 @@ function generate() {
         case "S":
         case "K":
         case "L":
-          let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
-          stroke(0, 255, 0, alp4);
+          stroke(0, 255, 0);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+
+          //compensate for y direction
+          stroke(10,10,255);
+          if (-4 < curDir && curDir < 0) {
+            // if going down
+            netYPos -= segLen;
+            if (netYPos > height*3/4) {
+              // if we are above bounceback line and going down
+              // extend down 1 seg
+              if (curDir == -1) {
+                rotate(-45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(45);
+              } else if (curDir == -3) {
+                rotate(45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(-45);
+              } else if (curDir == -2) {
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+              }
+              netYPos -= segLen;
+            }
+          } else if (4 > curDir && curDir > 0) {
+            // if going up
+            netYPos += segLen;
+            if (netYPos < height/4) {
+              // if we are below bounceback line and going up
+              // extend up 1 seg
+              if (curDir == 1) {
+                rotate(45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(-45);
+              } else if (curDir == 3) {
+                rotate(-45);
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+                rotate(45);
+              } else if (curDir == 2) {
+                line(0, 0, 0, -segLen); // line from origin up
+                translate(0, -segLen); // move to the end of the line
+              }
+              netYPos += segLen;
+            }
+          }
 
           if (Math.abs(curDir) < 2) {
             curXSeg++;

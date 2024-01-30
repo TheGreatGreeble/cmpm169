@@ -27,7 +27,7 @@ class MyClass {
 
 
 let angle = 25;
-let gen = 0;
+let gen = 1;
 let axiom = "TSH";
 let sentence = axiom;
 let mybutton;
@@ -109,7 +109,7 @@ function draw() {
 
 function generate() {
     console.log(gen);
-    if (gen < 4) { // only 4 generations
+    if (gen < 5) { // only 4 generations
       
       gen++
       //len *=0.618;+
@@ -155,7 +155,7 @@ function generate() {
       turtle();
   
     } else { // reset the tree and sentence, get random angle, call turtle 
-      gen = 0;
+      gen = 1;
       sentence = axiom;
       segs = 3;
       output.html(sentence + "\n " + segs + " Segments of length " + len/segs + "=" + segs * (len/segs));
@@ -175,6 +175,7 @@ function generate() {
     let curXSeg = 0;
     let netXLen = 0;
     let netYPos = startY;
+    let bounceYLine = height/(gen*2)
     print("segments: " + segs);
     print("of Length: " + segLen);
     resetMatrix(); // need to reset the matrix each time through
@@ -182,7 +183,7 @@ function generate() {
     rotate(startAng);
     let curDir = 0;
     //curPoint.Add(startX,startY,startAng);
-    strokeWeight(girth);
+    strokeWeight(girth/gen);
 
     push();
     for (let i = 0; i < sentence.length; i++) {
@@ -201,44 +202,30 @@ function generate() {
           if (-4 < curDir && curDir < 0) {
             // if going down
             netYPos -= segLen;
-            if (netYPos > height*3/4) {
+            if (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
+              line(0, 0, 0, -segLen); // line from origin up
+              translate(0, -segLen); // move to the end of the line
               if (curDir == -1) {
-                rotate(-45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(45);
+                netXLen++;
               } else if (curDir == -3) {
-                rotate(45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(-45);
-              } else if (curDir == -2) {
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
+                netXLen--;
               }
               netYPos -= segLen;
             }
           } else if (4 > curDir && curDir > 0) {
             // if going up
             netYPos += segLen;
-            if (netYPos < height/4) {
+            if (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
+              line(0, 0, 0, -segLen); // line from origin up
+              translate(0, -segLen); // move to the end of the line
               if (curDir == 1) {
-                rotate(45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(-45);
+                netXLen++;
               } else if (curDir == 3) {
-                rotate(-45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(45);
-              } else if (curDir == 2) {
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
+                netXLen--;
               }
               netYPos += segLen;
             }
@@ -269,54 +256,41 @@ function generate() {
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
 
-          //compensate for y direction
           stroke(10,10,255);
+          //compensate for y direction
           if (-4 < curDir && curDir < 0) {
             // if going down
             netYPos -= segLen;
-            if (netYPos > height*3/4) {
+            if (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
+              line(0, 0, 0, -segLen); // line from origin up
+              translate(0, -segLen); // move to the end of the line
               if (curDir == -1) {
-                rotate(-45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(45);
+                netXLen++;
               } else if (curDir == -3) {
-                rotate(45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(-45);
-              } else if (curDir == -2) {
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
+                netXLen--;
               }
               netYPos -= segLen;
             }
           } else if (4 > curDir && curDir > 0) {
             // if going up
             netYPos += segLen;
-            if (netYPos < height/4) {
+            if (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
+              line(0, 0, 0, -segLen); // line from origin up
+              translate(0, -segLen); // move to the end of the line
               if (curDir == 1) {
-                rotate(45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(-45);
+                netXLen++;
               } else if (curDir == 3) {
-                rotate(-45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(45);
-              } else if (curDir == 2) {
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
+                netXLen--;
               }
               netYPos += segLen;
             }
           }
 
+          // compensate for x direction
           if (Math.abs(curDir) < 2) {
             curXSeg++;
             netXLen++;
@@ -345,54 +319,41 @@ function generate() {
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
 
-          //compensate for y direction
           stroke(10,10,255);
+          //compensate for y direction
           if (-4 < curDir && curDir < 0) {
             // if going down
             netYPos -= segLen;
-            if (netYPos > height*3/4) {
+            if (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
+              line(0, 0, 0, -segLen); // line from origin up
+              translate(0, -segLen); // move to the end of the line
               if (curDir == -1) {
-                rotate(-45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(45);
+                netXLen++;
               } else if (curDir == -3) {
-                rotate(45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(-45);
-              } else if (curDir == -2) {
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
+                netXLen--;
               }
               netYPos -= segLen;
             }
           } else if (4 > curDir && curDir > 0) {
             // if going up
             netYPos += segLen;
-            if (netYPos < height/4) {
+            if (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
+              line(0, 0, 0, -segLen); // line from origin up
+              translate(0, -segLen); // move to the end of the line
               if (curDir == 1) {
-                rotate(45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(-45);
+                netXLen++;
               } else if (curDir == 3) {
-                rotate(-45);
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
-                rotate(45);
-              } else if (curDir == 2) {
-                line(0, 0, 0, -segLen); // line from origin up
-                translate(0, -segLen); // move to the end of the line
+                netXLen--;
               }
               netYPos += segLen;
             }
           }
 
+          // compensate for x direction
           if (Math.abs(curDir) < 2) {
             curXSeg++;
             netXLen++;

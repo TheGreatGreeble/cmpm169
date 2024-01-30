@@ -109,7 +109,7 @@ function draw() {
 
 function generate() {
     console.log(gen);
-    if (gen < 5) { // only 5 generations
+    if (gen < 4) { // only 4 generations
       
       gen++
       //len *=0.618;+
@@ -172,8 +172,8 @@ function generate() {
     let is45 = false;
     let segLen = len/segs; // segment length
     let seg45Len = segLen * Math.sqrt(2);
-    let curSeg = 1;
-    let netXLenGoal = Math.round(segLen); // total number of segments needed to reach ~length 
+    let curXSeg = 0;
+    let netXLenGoal = Math.floor(segLen); // total number of segments needed to reach ~length 
     let netXLen = 0;
     print("segments: " + segs);
     print("of Length: " + segLen);
@@ -194,12 +194,13 @@ function generate() {
           stroke(100, 100, 0, alp2);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
-          curSeg++;
 
           if (Math.abs(curDir) < 2) {
-            // if going right
+            curXSeg++;
             netXLen++;
-            if (netXLenGoal - netXLen < segs - curSeg) {
+            // if going right
+            if (netXLen < curXSeg) {
+              stroke(255,10,10);
               line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
               translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               netXLen++;
@@ -207,6 +208,7 @@ function generate() {
 
           } else if (Math.abs(curDir) > 2) {
             // if going left
+            curXSeg++;
             netXLen--;
 
           } else {
@@ -215,16 +217,17 @@ function generate() {
           break;
         case "H":
           let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
-  
+          
           stroke(200, 255, 200, alp3);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
-          curSeg++;
 
           if (Math.abs(curDir) < 2) {
-            // if going right
+            curXSeg++;
             netXLen++;
-            if (netXLenGoal - netXLen < segs - curSeg) {
+            // if going right
+            if (netXLen < curXSeg) {
+              stroke(255,10,10);
               line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
               translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               netXLen++;
@@ -232,6 +235,7 @@ function generate() {
 
           } else if (Math.abs(curDir) > 2) {
             // if going left
+            curXSeg++;
             netXLen--;
 
           } else {
@@ -246,12 +250,13 @@ function generate() {
           stroke(0, 255, 0, alp4);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
-          curSeg++;
 
           if (Math.abs(curDir) < 2) {
-            // if going right
+            curXSeg++;
             netXLen++;
-            if (netXLenGoal - netXLen < segs - curSeg) {
+            // if going right
+            if (netXLen < curXSeg) {
+              stroke(255,10,10);
               line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
               translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               netXLen++;
@@ -259,6 +264,7 @@ function generate() {
 
           } else if (Math.abs(curDir) > 2) {
             // if going left
+            curXSeg++;
             netXLen--;
 
           } else {

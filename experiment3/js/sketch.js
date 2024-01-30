@@ -119,23 +119,23 @@ function generate() {
         // simple rule with an if then else
         if (current === 'S') { // if 'S' make substitution
           if (random(-1,1) > 0) {
-            nextsentence += "LSK";
+            nextsentence += "L+S-K";
           } else {
-            nextsentence += "KSL";
+            nextsentence += "K-S+L";
           }
           segs += 2;
         } else if(current === 'K') {
           if (random(-1,1) > 0) {
-            nextsentence += "--S++S--S++";
+            nextsentence += "S--S++S++S--S";
           } else {
-            nextsentence += "++S--S++S--";
+            nextsentence += "S++S--S--S++S";
           }
-          segs += 2;
+          segs += 3;
         } else if(current === 'L') {
           if (random(-1,1) > 0) {
-            nextsentence += "-SS--S--S--SS-";
+            nextsentence += "S-SS--S--S--SS-S";
           } else {
-            nextsentence += "+SS++S++S++SS+";
+            nextsentence += "S+SS++S++S++SS+S";
           }
           
           segs+=3;
@@ -150,7 +150,7 @@ function generate() {
         }
       }
       sentence = nextsentence // 
-      output.html(sentence);
+      output.html(sentence + "\n " + segs + " Segments of length " + len/segs + "=" + segs * (len/segs));
       
       turtle();
   
@@ -158,7 +158,7 @@ function generate() {
       gen = 0;
       sentence = axiom;
       segs = 3;
-      output.html(sentence);
+      output.html(sentence + "\n " + segs + " Segments of length " + len/segs + "=" + segs * (len/segs));
       angle = random(-60, 60);
       turtle();
     }
@@ -168,19 +168,21 @@ function generate() {
   
   function turtle() {
     updatePixels();
-    let west = 90
+    //let curPoint = createVector(0,0,0); // x, y, angle
     let is45 = false;
-    let curSeg = 0;
-    let curLen = len/segs;
-    let cur45Len = curLen * Math.sqrt(2);
-    let curAng = 330/segs;
-    let angRot = 0;
+    let segLen = len/segs; // segment length
+    let seg45Len = segLen * Math.sqrt(2);
+    let curSeg = 1;
+    let netXLenGoal = Math.round(segLen); // total number of segments needed to reach ~length 
+    let netXLen = 0;
     print("segments: " + segs);
-    print("of Length: " + curLen);
+    print("of Length: " + segLen);
     resetMatrix(); // need to reset the matrix each time through
     translate(startX, startY);
     rotate(startAng);
-    west -= startAng;
+    let curDir = 0;
+    //curPoint.Add(startX,startY,startAng);
+
     push();
     for (let i = 0; i < sentence.length; i++) {
       let current = sentence.charAt(i); // get char in sentence
@@ -190,27 +192,51 @@ function generate() {
           let alp2 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(100, 100, 0, alp2);
-          if (is45) {
-            line(0, 0, 0, -cur45Len); // line from origin up
-            translate(0, -cur45Len); // move to the end of the line
+          line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+          translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+          curSeg++;
+
+          if (Math.abs(curDir) < 2) {
+            // if going right
+            netXLen++;
+            if (netXLenGoal - netXLen < segs - curSeg) {
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+              netXLen++;
+            }
+
+          } else if (Math.abs(curDir) > 2) {
+            // if going left
+            netXLen--;
+
           } else {
-            line(0, 0, 0, -curLen); // line from origin up
-            translate(0, -curLen); // move to the end of the line
+            // if going up or down
           }
-          //rotate(curAng);
           break;
         case "H":
           let alp3 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(200, 255, 200, alp3);
-          if (is45) {
-            line(0, 0, 0, -cur45Len); // line from origin up
-            translate(0, -cur45Len); // move to the end of the line
+          line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+          translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+          curSeg++;
+
+          if (Math.abs(curDir) < 2) {
+            // if going right
+            netXLen++;
+            if (netXLenGoal - netXLen < segs - curSeg) {
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+              netXLen++;
+            }
+
+          } else if (Math.abs(curDir) > 2) {
+            // if going left
+            netXLen--;
+
           } else {
-            line(0, 0, 0, -curLen); // line from origin up
-            translate(0, -curLen); // move to the end of the line
+            // if going up or down
           }
-          //rotate(curAng);
           break;
         case "S":
         case "K":
@@ -218,25 +244,39 @@ function generate() {
           let alp4 = map(gen, 0, 5, 255, 50); // mapping the alpha
   
           stroke(0, 255, 0, alp4);
-          if (is45) {
-            line(0, 0, 0, -cur45Len); // line from origin up
-            translate(0, -cur45Len); // move to the end of the line
+          line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+          translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+          curSeg++;
+
+          if (Math.abs(curDir) < 2) {
+            // if going right
+            netXLen++;
+            if (netXLenGoal - netXLen < segs - curSeg) {
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
+              netXLen++;
+            }
+
+          } else if (Math.abs(curDir) > 2) {
+            // if going left
+            netXLen--;
+
           } else {
-            line(0, 0, 0, -curLen); // line from origin up
-            translate(0, -curLen); // move to the end of the line
+            // if going up or down
           }
-          //rotate(curAng);
           break;
         case "+":
           //angRot = round(random(-90,90));
           rotate(45);
-          west -= 45;
+          curDir++;
+          if (curDir > 4) curDir = -3;
           is45 = !is45;
           break;
         case "-":
           //angRot = round(random(-90,90));
           rotate(-45);
-          west -= -45;
+          curDir--;
+          if (curDir < -4) curDir = 3;
           is45 = !is45;
           break;
         case "[":

@@ -31,57 +31,67 @@
 			<h1>Experiment 3 - Generative Methods: L-system Snake</h1>
 			<div class="minor-section">
 				<h2>Imitate</h2>
-				<p>To develop artistic creativity in coding, it can be helpful to start by studying and learning from existing examples. This might involve reviewing code written by others, analyzing successful techniques, or even copying and modifying code to better understand how it works. By imitating and learning from existing techniques and strategies, we can gain a better understanding of what has been done before and what is possible, and identify opportunities for improvement and innovation.</p>
-				<p>What code did you start with? (You don't need to provide the code itself, but where did you start?) Document this step briefly.</p>
-				<p>I wanted to explore L-systems, some light googling brought me to a tutorial, linked at the bottom of the page, by Greg Gelong. It creates a simple L-system in a feather-like shape.</p>
+				<p>I wanted to explore L-systems, some light googling brought me to some simple L-System example code, linked at the bottom of the page, by Greg Gelong. It creates a simple L-system in a feather-like shape.</p>
+				<img class="image" src="../Documentation/E3/imiTree1.PNG">
+				<p>I used this code as a jumping off point to mess around with L-Systems and figure out what to do</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Integrate</h2>
-				<p>After learning from existing techniques and strategies, we can build upon that foundation by combining elements from different sources. This might involve combining elements from different programming languages, using libraries or frameworks in new ways, or bringing together techniques from different fields or disciplines. By integrating and combining elements from different sources, we can create something new and unique.</p>
-				<p>How did you extend the code or combine with another technique to make something new? Document this step.</p>
-				<p>wanted to make crom cruach</p>
-				<p>made circle</p>
-				<p>made perlin noise background like in pic</p>
-				<p>made L-system go straight across instead to fill space (also easier)</p>
+				<p>I had recently rewatched a movie called the Secret of Kells. In it, there's this huge, geometric snake monster named Crom Cruach. I thought it would make for a really cool experiment to try and immitate it's form.</p>
+				<img class="image" src="../Documentation/E3/intCrom1.jpg">
+				<p>I started by just experimented with the L-System, I altered it in such a way that each generation would make a more complete circle.</p>
+				<img class="image" src="../Documentation/E3/Circle1.PNG">
+				<p>Crom Cruach wasn't going to end as a circle, but I did want to make sure my L-System didn't branch out, and instead made one long continous snake</p>
+				<p>I also wanted to make the space I was working in look nicer, so I used Chat GPT to quickly make a perlin noise generator for the background colors that appear behing Crom Cruach</p>
+				<img class="image" src="../Documentation/E3/CirclePerlin1.PNG">
+				<p>However, fixing every pixel was making the load time excrutiatingly long, so I expediated it by only changing color every few pixels</p>
+				<img class="image" src="../Documentation/E3/IntPerlinCode1.PNG">
+				<p>I then messed with the L-System to extend and squiggle the snake across the screen.</p>
+				<img class="image" src="../Documentation/E3/intStraight2.PNG">
+
 			</div>
 
 			<div class="minor-section">
 				<h2>Innovate</h2>
-				<p>Finally, we can introduce new or original ideas to our coding process by thinking creatively and pushing the boundaries. This might involve developing entirely new techniques or approaches, or using existing techniques in new and creative ways. By innovating and introducing new ideas, we can create art that is truly groundbreaking.</p>
-				<p>How did you use the code as a jumping off point to create something truly unique and novel? Document this step thoroughly.</p>
-				<p>first I started trying to get a twisting pattern to emerge from the snake</p>
-				<p>Twisting pattern should never rotate more then 90 degrees</p>
-				<p>setup some basic rules for the sentence structure, and added some random variation to make it look more natural</p>
-				<p>twisting causes it to shrink</p>
-				<p>compensated for snake length by extending certain sections when needed</p>
-				<p>compensation was over compensating</p>
-				<p>messed around with compensation until it was acceptable length</p>
-				<p>then moved on to vertical compensation</p>
-				<p>then made it look more like crom cruach by making 2 lines of differing strokelengths</p>
-				<p>et viola</p>
+				<p>first I started trying to get a twisting pattern to emerge from the snake. I added a distinct looping pattern (L), and a wiggle pattern (K). To make it look more natural, I also implimented some slight random variation. Although, I made the rotations only turn at 45 degree angles.</p>
+				<img class="image" src="../Documentation/E3/InnSnakeTwistCode1.PNG">
+				<img class="image" src="../Documentation/E3/InnSnakeTwist1.PNG">
+				<p>This was getting better, but there were some patterns I was noticing that I didn't like; Namely, there were many times where a turn would form an acute angle, or completely turn around on itself. This made it look a lot less natural, and is something I noted Crom Cruach in the movie never does</p>
+				<p>I decided I needed some better sentence structure for the L-System. I found that a big problem was that some of the character replacements I had ended/started with a rotation. this could cause the rotations to stack next to eachother. I simply made sure that any rotations had line segments around them, this let me control how many rotations can happen before the system draws another line segment.</p>
+				<img class="image" src="../Documentation/E3/InnSnakeTwistCode1.PNG">
+				<p>The twisting was also causing the snake to shrivel, and not extend very far. This is because the snake was always the same total length, so the twisting shortened how far it stretched out to</p>
+				<p>I compensated for snake length by extending segments that were heading to the right</p>
+				<img class="image" src="../Documentation/E3/innOverComp1.PNG">
+				<img class="image" src="../Documentation/E3/innOverCompCode1.PNG">
+				<p>This did stretch out the snake, but now it was also overcompensating, and would frequently go way past the edge of the screen.</p>
+				<p>I managed to adjust the compensation enough by keeping better track of how far to the right of the screen the snake had gotten, and coloring extended segments red</p>
+				<img class="image" src="../Documentation/E3/innOverComp2.PNG">
+				<p>This was good, but would often also go off the top or bottom of the screen. This time I made it extend to the center further whenever the snake moved above or below a certain threshold .</p>
+				<img class="image" src="../Documentation/E3/InnVertComp1.PNG">
+				<p>It wasn't perfect, but the point was more to make the head and the tail be visible, which it succeeded at doing by the final generation every time</p>
+				<p>I then made it look more like crom cruach by making 2 lines of differing strokelengths/color on top of eachother each time I drew a line</p>
+				<img class="image" src="../Documentation/E3/innCromSnake.PNG">
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment. Here's where you can put your reflections.</p>
-				<ul>
-					<li>What part of the project you contributed</li>
-					<p>everything</p>
-					<li>A reflection on your work and the work of the team</li>
-					<p>I wanted to make it as close to the crom cruach in the movie as possible. In the end it didn't come out looking quite like it, but I'm happy with it none the less. I had never heard about L-Systems before this class, but I really like them. I'm glad I learned how they worked, it was fun to play with their logic</p>
-					<li>Brief highs and lows</li>
-					<p>I was really sad that I couldn't get the endless twisting around itself like in the movie, but I when considering implimentation and L-Systems, I just couldn't think of a way to do it that wouldn't make way more work for myself then I could commit to.</p>
-					<p>I'm really happy with the variation of the twists I got. At first I was having a hard time figuring out how to adhere to my own rules for how I wanted it to look, but it was a really interesting problem to solve. I had a lot of fun doing it, and seeing it twist in weird ways across the screen was really cool to accomplish.</p>
-				</ul>
+				<p>I wanted to make my snake it as close to the crom cruach in the movie as possible. In the end it didn't come out looking quite right, but I'm happy with it none the less. I had never heard about L-Systems before this class, but I really like them. I'm glad I learned how they worked, it was fun to play with their logic</p>
+				<p>I was really sad that I couldn't get the endless twisting around itself like in the movie, but I when considering implimentation and L-Systems, I just couldn't think of a way to do it that wouldn't make way more work for myself then I could commit to.</p>
+				<p>I think if I had more time I would also want to figure out how to use quads to draw the snake instead of simple lines, this way I could make it thicker and match up the ends of each segment, which right now don't fully connect. I could also maybe make the head and tail look like a head and tail.</p>
+				<p>I'm really happy with the variation of the twists I got. At first I was having a hard time figuring out how to adhere to my own rules for how I wanted it to look, but it was a really interesting problem to solve. I had a lot of fun doing it, and seeing it twist in weird ways across the screen was really cool to accomplish.</p>
+				
 			</div>
 
 			<div class="minor-section">
 				<h2>Results</h2>
+				<p>click the Generate button below to squiggle the snake!!!</p>
+				<p>go up to max (4) generations for FULL SNAKE</p>
+				<button id="button"  type="button">Generate</button>
 				<div id="canvas-container">
 					<!-- canvas will be added here -->
 				</div>
-				<button id="button"  type="button">Generate</button>
+				
 			</div>
 			<br>
 			<textarea id="output" cols="50" rows="8">

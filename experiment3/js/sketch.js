@@ -175,7 +175,7 @@ function generate() {
     let curXSeg = 0;
     let netXLen = 0;
     let netYPos = startY;
-    let bounceYLine = height/(gen*2)
+    let bounceYLine = height/(gen+1)
     print("segments: " + segs);
     print("of Length: " + segLen);
     resetMatrix(); // need to reset the matrix each time through
@@ -183,7 +183,7 @@ function generate() {
     rotate(startAng);
     let curDir = 0;
     //curPoint.Add(startX,startY,startAng);
-    strokeWeight(girth/gen);
+    strokeCap(SQUARE);
 
     push();
     for (let i = 0; i < sentence.length; i++) {
@@ -192,12 +192,17 @@ function generate() {
       switch (current) {
         case "T":
   
-          stroke(100, 100, 0);
+          //stroke(100, 100, 0);
+          stroke(200,200,255)
+          strokeWeight(girth/gen + girth/gen/2);
+          line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+          stroke(6, 90, 90)
+          strokeWeight(girth/gen);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
 
           
-          stroke(10,10,255);
+          //stroke(10,10,255);
           //compensate for y direction
           if (-4 < curDir && curDir < 0) {
             // if going down
@@ -205,8 +210,13 @@ function generate() {
             if (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
-              line(0, 0, 0, -segLen); // line from origin up
-              translate(0, -segLen); // move to the end of the line
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               if (curDir == -1) {
                 netXLen++;
               } else if (curDir == -3) {
@@ -220,8 +230,13 @@ function generate() {
             if (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
-              line(0, 0, 0, -segLen); // line from origin up
-              translate(0, -segLen); // move to the end of the line
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               if (curDir == 1) {
                 netXLen++;
               } else if (curDir == 3) {
@@ -237,7 +252,12 @@ function generate() {
             netXLen++;
             // if going right
             if (netXLen < curXSeg) {
-              stroke(255,10,10);
+              //stroke(255,10,10);
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
               line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
               translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               netXLen++;
@@ -252,11 +272,16 @@ function generate() {
           break;
         case "H":
           
-          stroke(200, 255, 200);
+          //stroke(200, 255, 200);
+          stroke(200,200,255)
+          strokeWeight(girth/gen + girth/gen/2);
+          line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+          stroke(6, 90, 90)
+          strokeWeight(girth/gen);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
 
-          stroke(10,10,255);
+          //stroke(10,10,255);
           //compensate for y direction
           if (-4 < curDir && curDir < 0) {
             // if going down
@@ -264,8 +289,13 @@ function generate() {
             if (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
-              line(0, 0, 0, -segLen); // line from origin up
-              translate(0, -segLen); // move to the end of the line
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               if (curDir == -1) {
                 netXLen++;
               } else if (curDir == -3) {
@@ -279,8 +309,13 @@ function generate() {
             if (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
-              line(0, 0, 0, -segLen); // line from origin up
-              translate(0, -segLen); // move to the end of the line
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               if (curDir == 1) {
                 netXLen++;
               } else if (curDir == 3) {
@@ -296,7 +331,12 @@ function generate() {
             netXLen++;
             // if going right
             if (netXLen < curXSeg) {
-              stroke(255,10,10);
+              //stroke(255,10,10);
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
               line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
               translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               netXLen++;
@@ -315,11 +355,16 @@ function generate() {
         case "K":
         case "L":
   
-          stroke(0, 255, 0);
+          //stroke(0, 255, 0);
+          stroke(200,200,255)
+          strokeWeight(girth/gen + girth/gen/2);
+          line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+          stroke(6, 90, 90)
+          strokeWeight(girth/gen);
           line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
           translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
 
-          stroke(10,10,255);
+          //stroke(10,10,255);
           //compensate for y direction
           if (-4 < curDir && curDir < 0) {
             // if going down
@@ -327,8 +372,13 @@ function generate() {
             if (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
-              line(0, 0, 0, -segLen); // line from origin up
-              translate(0, -segLen); // move to the end of the line
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               if (curDir == -1) {
                 netXLen++;
               } else if (curDir == -3) {
@@ -342,8 +392,13 @@ function generate() {
             if (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
-              line(0, 0, 0, -segLen); // line from origin up
-              translate(0, -segLen); // move to the end of the line
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               if (curDir == 1) {
                 netXLen++;
               } else if (curDir == 3) {
@@ -359,7 +414,12 @@ function generate() {
             netXLen++;
             // if going right
             if (netXLen < curXSeg) {
-              stroke(255,10,10);
+              //stroke(255,10,10);
+              stroke(200,200,255)
+              strokeWeight(girth/gen + girth/gen/2);
+              line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
+              stroke(6, 90, 90)
+              strokeWeight(girth/gen);
               line(0, 0, 0, ((is45) ? -seg45Len : -segLen)); // line from origin up
               translate(0, ((is45) ? -seg45Len : -segLen)); // move to the end of the line
               netXLen++;

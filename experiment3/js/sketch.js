@@ -207,7 +207,7 @@ function generate() {
           if (-4 < curDir && curDir < 0) {
             // if going down
             netYPos -= segLen;
-            if (netYPos > height-bounceYLine) {
+            while (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
               stroke(200,200,255)
@@ -227,7 +227,7 @@ function generate() {
           } else if (4 > curDir && curDir > 0) {
             // if going up
             netYPos += segLen;
-            if (netYPos < bounceYLine) {
+            while (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
               stroke(200,200,255)
@@ -286,7 +286,7 @@ function generate() {
           if (-4 < curDir && curDir < 0) {
             // if going down
             netYPos -= segLen;
-            if (netYPos > height-bounceYLine) {
+            while (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
               stroke(200,200,255)
@@ -306,7 +306,7 @@ function generate() {
           } else if (4 > curDir && curDir > 0) {
             // if going up
             netYPos += segLen;
-            if (netYPos < bounceYLine) {
+            while (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
               stroke(200,200,255)
@@ -369,7 +369,7 @@ function generate() {
           if (-4 < curDir && curDir < 0) {
             // if going down
             netYPos -= segLen;
-            if (netYPos > height-bounceYLine) {
+            while (netYPos > height-bounceYLine) {
               // if we are above bounceback line and going down
               // extend down 1 seg
               stroke(200,200,255)
@@ -389,7 +389,7 @@ function generate() {
           } else if (4 > curDir && curDir > 0) {
             // if going up
             netYPos += segLen;
-            if (netYPos < bounceYLine) {
+            while (netYPos < bounceYLine) {
               // if we are below bounceback line and going up
               // extend up 1 seg
               stroke(200,200,255)

@@ -209,7 +209,7 @@ function generate() {
           } else if (Math.abs(curDir) > 2) {
             // if going left
             curXSeg++;
-            netXLen--;
+            //netXLen--;
 
           } else {
             // if going up or down
@@ -236,7 +236,7 @@ function generate() {
           } else if (Math.abs(curDir) > 2) {
             // if going left
             curXSeg++;
-            netXLen--;
+            //netXLen--;
 
           } else {
             // if going up or down
@@ -265,7 +265,7 @@ function generate() {
           } else if (Math.abs(curDir) > 2) {
             // if going left
             curXSeg++;
-            netXLen--;
+            //netXLen--;
 
           } else {
             // if going up or down

@@ -31,7 +31,7 @@ let canvasContainer;
 
  var mode = 0;
 
- var imgSrcFileName = "new-york_768.jpg";
+ var imgSrcFileName = "MacEssence.jpg";
  var imgSrc;            // source image  
  var imgSrcPixels = []; // packed RGB of source image
  var imgPixels = [];    // packed RGB of sorted image
@@ -64,16 +64,12 @@ function setup() {
       console.log("Resizing...");
       resizeCanvas(imgSrc.width, imgSrc.height);
   });
-  // create an instance of the class
-  myInstance = new MyClass(VALUE1, VALUE2);
 
   var centerHorz = windowWidth / 2;
   var centerVert = windowHeight / 2;
-    
   //createCanvas(  );
   pixelDensity( 1 );
   cursor( HAND );
-
   paramsDiv = createDiv('...');
   paramsDiv.style("position", "absolute");
   paramsDiv.style("width", "100%");
@@ -83,7 +79,7 @@ function setup() {
   paramsDiv.style("color", "#fff");
   paramsDiv.style("text-shadow", "1px 1px 0 #000");
   paramsDiv.style("text-align", "center");
-
+  
   imgSrc.loadPixels();
   for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
     imgSrcPixels[int(i/4)] = (255 << 24) | (imgSrc.pixels[i] << 16) | (imgSrc.pixels[i+1] << 8) | (imgSrc.pixels[i+2]);

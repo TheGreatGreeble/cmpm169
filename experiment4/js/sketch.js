@@ -33,8 +33,8 @@ let canvasContainer;
 
  var imgSrcFileName = "MacEssence.jpg";
  var imgSrc;            // source image  
- var imgSrcPixels = []; // packed RGB of source image
- var imgPixels = [];    // packed RGB of sorted image
+ var imgSrcPixels = []; // packed ARGB of source image
+ var imgPixels = [];    // packed ARGB of sorted image
  
  // threshold values to determine sorting start and end pixels
  var blackValue;
@@ -89,62 +89,81 @@ function setup() {
   loadPixels();
   
   updateParams();
+  imgPixels = imgSrcPixels.slice();
+    var imageBytes = 4*(imgSrc.width*imgSrc.height);
+    var i = 0;
+    while (i < imageBytes) {
+        var col = imgPixels[int(i/4)];
+        pixels[i++] = col >> 16 & 255;
+        pixels[i++] = col >> 8 & 255;
+        pixels[i++] = col & 255;
+        pixels[i++] = 255;
+    }
+    updatePixels();
 }
  
  
  function draw() 
  {
-   imgPixels = imgSrcPixels.slice();
- 
-     row = 0;
-     column = 0;
+    /*
+    
+    imgPixels = imgSrcPixels.slice();
+    row = 0;
+    column = 0;
  
      // loop through rows
-     while (row < height - 1) {
-         sortRow();
-         row++;
-     }
+    while (row < height - 1) {
+        sortRow();
+        row++;
+    }
  
      // loop through columns
-     while (column < width - 1) {
-         sortColumn();
-         column++;
-     }
+    while (column < width - 1) {
+        sortColumn();
+        column++;
+    }
  
-      var imageBytes = 4*(imgSrc.width*imgSrc.height);
- 
-   var i = 0;
-     while (i < imageBytes) {
-         var col = imgPixels[int(i/4)];
+    var imageBytes = 4*(imgSrc.width*imgSrc.height);
+    var i = 0;
+    while (i < imageBytes) {
+        var col = imgPixels[int(i/4)];
         pixels[i++] = col >> 16 & 255;
-         pixels[i++] = col >> 8 & 255;
-         pixels[i++] = col & 255;
+        pixels[i++] = col >> 8 & 255;
+        pixels[i++] = col & 255;
         pixels[i++] = 255;
-   }
+    }
  
      updatePixels();
+     */
  }
  
  
  function mouseClicked() 
  {
-     if (mode < 2) {
-         ++mode;
-     } else {
-         mode = 0;
-     }
-     updateParams();
+    imgPixels = imgSrcPixels.slice();
+    testSort();
+    var imageBytes = 4*(imgSrc.width*imgSrc.height);
+    var i = 0;
+    while (i < imageBytes) {
+        var col = imgPixels[int(i/4)];
+        pixels[i++] = col >> 16 & 255;
+        pixels[i++] = col >> 8 & 255;
+        pixels[i++] = col & 255;
+        pixels[i++] = 255;
+    }
+    updatePixels();
  }
- 
  
  function mouseMoved() 
  {
      updateParams();
  }
  
- 
  function updateParams() 
  {
+    // -16777216 == 0b 11111111 00000000 00000000 00000000
+    //         0 == 0b 00000000 00000000 00000000 00000000 
+    //       255 == 0b 00000000 00000000 00000000 11111111
      if (mode === 0) {
          blackValue = int(map(mouseX, 0, width - 1, -16777216, 0));
      } else if (mode == 1) {
@@ -167,6 +186,11 @@ function setup() {
    }
  }
  
+ function testSort() {
+    for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
+        imgPixels[int(i/4)] = (255 << 24) | (0 << 16) | (0 << 8) | (0);
+      }
+ }
  
  function sortRow() 
  {
@@ -218,8 +242,6 @@ function setup() {
          x = xend + 1;
      }
  }
- 
- 
  function sortColumn() 
  {
      // current column
@@ -269,8 +291,6 @@ function setup() {
          y = yend + 1;
      }
  }
- 
- 
  // black x
  function getFirstNotBlackX( x, y )
  {
@@ -282,74 +302,6 @@ function setup() {
      }
      return x;
  }
- 
- 
- function getNextBlackX( x, y )
- {
-     x++;
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] > blackValue) {
-         x++;
-         if (x >= width)
-             return width - 1;
-     }
-     return x - 1;
- }
- 
- 
- // brightness x
- function getFirstBrightX( x, y )
- {
-     var iRow = y * imgSrc.width;
-     while (brightness2(imgPixels[x + iRow]) < brightnessValue) {
-         x++;
-         if (x >= width)
-             return -1;
-     }
-     return x;
- }
- 
- 
- function getNextDarkX( _x, _y )
- {
-     var x = _x + 1;
-     var y = _y;
- 
-     var iRow = y * imgSrc.width;
-     while (brightness2(imgPixels[x + iRow]) > brightnessValue) {
-         x++;
-         if (x >= width) return width - 1;
-     }
-     return x - 1;
- }
- 
- 
- // white x
- function getFirstNotWhiteX( x, y )
- {
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] > whiteValue) {
-         x++;
-         if (x >= width)
-             return -1;
-     }
-     return x;
- }
- 
- 
- function getNextWhiteX( x, y )
- {
-     x++;
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] < whiteValue) {
-         x++;
-         if (x >= width)
-             return width - 1;
-     }
-     return x - 1;
- }
- 
- 
  // black y
  function getFirstNotBlackY( x, y )
  {
@@ -362,8 +314,17 @@ function setup() {
      }
      return y;
  }
- 
- 
+ function getNextBlackX( x, y )
+ {
+     x++;
+     var iRow = y * imgSrc.width;
+     while (imgPixels[x + iRow] > blackValue) {
+         x++;
+         if (x >= width)
+             return width - 1;
+     }
+     return x - 1;
+ }
  function getNextBlackY( x, y )
  {
      y++;
@@ -376,8 +337,51 @@ function setup() {
      }
      return y - 1;
  }
+ // brightness x
+ function getFirstBrightX( x, y )
+ {
+     var iRow = y * imgSrc.width;
+     while (brightness2(imgPixels[x + iRow]) < brightnessValue) {
+         x++;
+         if (x >= width)
+             return -1;
+     }
+     return x;
+ }
+ function getNextDarkX( _x, _y )
+ {
+     var x = _x + 1;
+     var y = _y;
  
- 
+     var iRow = y * imgSrc.width;
+     while (brightness2(imgPixels[x + iRow]) > brightnessValue) {
+         x++;
+         if (x >= width) return width - 1;
+     }
+     return x - 1;
+ }
+ // white x
+ function getFirstNotWhiteX( x, y )
+ {
+     var iRow = y * imgSrc.width;
+     while (imgPixels[x + iRow] > whiteValue) {
+         x++;
+         if (x >= width)
+             return -1;
+     }
+     return x;
+ }
+ function getNextWhiteX( x, y )
+ {
+     x++;
+     var iRow = y * imgSrc.width;
+     while (imgPixels[x + iRow] < whiteValue) {
+         x++;
+         if (x >= width)
+             return width - 1;
+     }
+     return x - 1;
+ }
  // brightness y
  function getFirstBrightY( x, y )
  {
@@ -390,8 +394,6 @@ function setup() {
      }
      return y;
  }
- 
- 
  function getNextDarkY( x, y )
  {
      y++;

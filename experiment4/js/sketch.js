@@ -187,6 +187,9 @@ function setup() {
  }
  
  function testSort() {
+    // select random point in image
+    // check sorting area for bounds
+    // sort that area by hue
     for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
         imgPixels[int(i/4)] = (255 << 24) | (0 << 16) | (0 << 8) | (0);
       }

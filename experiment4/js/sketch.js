@@ -141,7 +141,7 @@ function setup() {
  function mouseClicked() 
  {
     imgPixels = imgSrcPixels.slice();
-    testSort();
+    hueSort();
     var imageBytes = 4*(imgSrc.width*imgSrc.height);
     var i = 0;
     while (i < imageBytes) {
@@ -186,20 +186,54 @@ function setup() {
    }
  }
  
- function testSort() {
+ var sortArea = 10;
+ function hueSort() {
     // select random point in image
-    // check sorting area for bounds
+    var posX = random(imgSrc.width-sortArea);
+    var posY = random(imgSrc.height-sortArea);
+
+    //get array array of effected area
+    var iRow;
+    var unsorted = [];
+
+    for (var i = 0; i < sortArea; i++) {
+        var inUnsorted = [];
+        iRow = (posY + i) * imgSrc.width;
+        for (var j = 0; j < sortArea; j++) {
+            inUnsorted[j] = imgPixels[iRow+posX+j];
+        }
+        unsorted[i] = inUnsorted;
+    }
+
     // sort that area by hue
+    var sorted = [];
+    /*
+    for(var i = 0; i < sortArea; i++) {
+        for(var j = 0; j < sortArea; j++) {
+            sorted[i][j] = unsorted[i][j];
+        }
+    }
+    */
+
+    // set sorted area
+    for (var i = 0; i < sortArea; i++) {
+        //row
+        for (var j = 0; j < sortArea; j++) {
+            //imgPixels[posX] = sorted[];
+        }
+        unsorted[i] = inUnsorted;
+    }
+
     for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
-        imgPixels[int(i/4)] = (255 << 24) | (0 << 16) | (0 << 8) | (0);
-      }
+        //imgPixels[int(i/4)] = (255 << 24) | (0 << 16) | (0 << 8) | (0);
+    }
  }
  
  function sortRow() 
  {
      // current row
-     var y = row;
      var iRow = y * imgSrc.width;
+     var y = row;
  
      // where to start sorting
      var x = 0;

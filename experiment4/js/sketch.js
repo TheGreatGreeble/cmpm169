@@ -83,12 +83,14 @@ function setup() {
   imgSrc.loadPixels();
   for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
     imgSrcPixels[int(i/4)] = (255 << 24) | (imgSrc.pixels[i] << 16) | (imgSrc.pixels[i+1] << 8) | (imgSrc.pixels[i+2]);
+    //print("source" + imgSrcPixels[int(i/4)]);
   }
   imgSrc.updatePixels();
 
   loadPixels();
   
   updateParams();
+  /*
   imgPixels = imgSrcPixels.slice();
     var imageBytes = 4*(imgSrc.width*imgSrc.height);
     var i = 0;
@@ -100,6 +102,7 @@ function setup() {
         pixels[i++] = 255;
     }
     updatePixels();
+    */
 }
  
  
@@ -186,11 +189,12 @@ function setup() {
    }
  }
  
- var sortArea = 10;
+ var sortArea = 60;
  function hueSort() {
     // select random point in image
-    var posX = random(imgSrc.width-sortArea);
-    var posY = random(imgSrc.height-sortArea);
+    var posX = round(random(imgSrc.width-sortArea));
+    var posY = round(random(imgSrc.height-sortArea));
+    print("sorting area at: (" + posX + ", " + posY + ")\n");
 
     //get array array of effected area
     var iRow;
@@ -201,27 +205,36 @@ function setup() {
         iRow = (posY + i) * imgSrc.width;
         for (var j = 0; j < sortArea; j++) {
             inUnsorted[j] = imgPixels[iRow+posX+j];
+            //print("RGBA: " + (imgPixels[iRow+posX+j] >> 16 & 255) + ", " + (imgPixels[iRow+posX+j] >> 8 & 255) + ", " + (imgPixels[iRow+posX+j] & 255) + ", ");
         }
         unsorted[i] = inUnsorted;
+    }
+    for (var i = 0; i < sortArea; i++) {
+        for (var j = 0; j < sortArea; j++) {
+            //print("(" + i + ", " + j + "):" + unsorted[i][j]);
+        }
     }
 
     // sort that area by hue
     var sorted = [];
-    /*
+    
     for(var i = 0; i < sortArea; i++) {
+        sorted[i] = [];
         for(var j = 0; j < sortArea; j++) {
-            sorted[i][j] = unsorted[i][j];
+            //print("setting area to " + unsorted[0][0] + "\n");
+            sorted[i][j] = unsorted[j][i];
         }
     }
-    */
+    
 
     // set sorted area
     for (var i = 0; i < sortArea; i++) {
+        iRow = (posY + i) * imgSrc.width;
         //row
         for (var j = 0; j < sortArea; j++) {
-            //imgPixels[posX] = sorted[];
+            //print("setting a pixel\n")
+            imgPixels[iRow+posX+j] = sorted[i][j];
         }
-        unsorted[i] = inUnsorted;
     }
 
     for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
@@ -279,167 +292,76 @@ function setup() {
          x = xend + 1;
      }
  }
- function sortColumn() 
- {
-     // current column
-     var x = column;
- 
-     // where to start sorting
-     var y = 0;
- 
-     // where to stop sorting
-     var yend = 0;
- 
-     while (yend < height - 1) {
-         switch (mode) {
-             case 0:
-                 y = getFirstNotBlackY(x, y);
-                 yend = getNextBlackY(x, y);
-                 break;
-             case 1:
-                 y = getFirstBrightY(x, y);
-                 yend = getNextDarkY(x, y);
-                 break;
-             case 2:
-                 y = getFirstNotWhiteY(x, y);
-                 yend = getNextWhiteY(x, y);
-                 break;
-             default:
-                 break;
-         }
- 
-         if (y < 0) break;
- 
-         var sortLength = yend - y;
- 
-         var unsorted = [];
-         var sorted = [];
- 
-         for (var i = 0; i < sortLength; i++) {
-             unsorted[i] = imgPixels[x + (y + i) * imgSrc.width];
-         }
- 
-         sorted = sort(unsorted);
- 
-         for (var i = 0; i < sortLength; i++) {
-             imgPixels[x + (y + i) * imgSrc.width] = sorted[i];
-         }
- 
-         y = yend + 1;
-     }
- }
- // black x
- function getFirstNotBlackX( x, y )
- {
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] < blackValue) {
-         x++;
-         if (x >= width)
-             return -1;
-     }
-     return x;
- }
- // black y
- function getFirstNotBlackY( x, y )
- {
-     if (y < height) {
-         while (imgPixels[x + y * imgSrc.width] < blackValue) {
-             y++;
-             if (y >= height)
-                 return -1;
-         }
-     }
-     return y;
- }
- function getNextBlackX( x, y )
- {
-     x++;
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] > blackValue) {
-         x++;
-         if (x >= width)
-             return width - 1;
-     }
-     return x - 1;
- }
- function getNextBlackY( x, y )
- {
-     y++;
-     if (y < height) {
-         while (imgPixels[x + y * imgSrc.width] > blackValue) {
-             y++;
-             if (y >= height)
-                 return height - 1;
-         }
-     }
-     return y - 1;
- }
- // brightness x
- function getFirstBrightX( x, y )
- {
-     var iRow = y * imgSrc.width;
-     while (brightness2(imgPixels[x + iRow]) < brightnessValue) {
-         x++;
-         if (x >= width)
-             return -1;
-     }
-     return x;
- }
- function getNextDarkX( _x, _y )
- {
-     var x = _x + 1;
-     var y = _y;
- 
-     var iRow = y * imgSrc.width;
-     while (brightness2(imgPixels[x + iRow]) > brightnessValue) {
-         x++;
-         if (x >= width) return width - 1;
-     }
-     return x - 1;
- }
- // white x
- function getFirstNotWhiteX( x, y )
- {
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] > whiteValue) {
-         x++;
-         if (x >= width)
-             return -1;
-     }
-     return x;
- }
- function getNextWhiteX( x, y )
- {
-     x++;
-     var iRow = y * imgSrc.width;
-     while (imgPixels[x + iRow] < whiteValue) {
-         x++;
-         if (x >= width)
-             return width - 1;
-     }
-     return x - 1;
- }
- // brightness y
- function getFirstBrightY( x, y )
- {
-     if (y < height) {
-         while (brightness2(imgPixels[x + y * imgSrc.width]) < brightnessValue) {
-             y++;
-             if (y >= height)
-                 return -1;
-         }
-     }
-     return y;
- }
- function getNextDarkY( x, y )
- {
-     y++;
-     if (y < height) {
-         while (brightness2(imgPixels[x + y * imgSrc.width]) > brightnessValue) {
-             y++;
-             if (y >= height)
-                 return height - 1;
-         }
-     }
-     return y - 1;
- }
+
+ // RGB to HSL conversion taken from https://gist.github.com/mjackson/5311256
+ /**
+ * Converts an RGB color value to HSL. Conversion formula
+ * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+ * Assumes r, g, and b are contained in the set [0, 255] and
+ * returns h, s, and l in the set [0, 1].
+ *
+ * @param   Number  r       The red color value
+ * @param   Number  g       The green color value
+ * @param   Number  b       The blue color value
+ * @return  Array           The HSL representation
+ */
+function rgbToHsl(r, g, b) {
+    r /= 255, g /= 255, b /= 255;
+  
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+  
+    if (max == min) {
+      h = s = 0; // achromatic
+    } else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+  
+      h /= 6;
+    }
+  
+    return [ h, s, l ];
+  }
+  
+  /**
+   * Converts an HSL color value to RGB. Conversion formula
+   * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+   * Assumes h, s, and l are contained in the set [0, 1] and
+   * returns r, g, and b in the set [0, 255].
+   *
+   * @param   Number  h       The hue
+   * @param   Number  s       The saturation
+   * @param   Number  l       The lightness
+   * @return  Array           The RGB representation
+   */
+  function hslToRgb(h, s, l) {
+    var r, g, b;
+  
+    if (s == 0) {
+      r = g = b = l; // achromatic
+    } else {
+      function hue2rgb(p, q, t) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      }
+  
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+  
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+  
+    return [ r * 255, g * 255, b * 255 ];
+  }

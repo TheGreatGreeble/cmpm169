@@ -14,39 +14,28 @@ const VALUE2 = 2;
 let myInstance;
 let canvasContainer;
 
-/*
+var mode = 0;
 
- ASDF Pixel Sort
- Kim Asendorf | 2010 | kimasendorf.com
- [recoded in p5.js by Antonio Belluscio]
-
- sorting modes
-
- 0 = black
- 1 = brightness
- 2 = white
-
- */
-
-
- var mode = 0;
-
- var imgSrcFileName = "MacEssence.jpg";
- var imgSrc;            // source image  
- var imgSrcPixels = []; // packed ARGB of source image
- var imgPixels = [];    // packed ARGB of sorted image
+var imgSrcFileName = "MacEssence.jpg";
+var imgSrc;            // source image  
+var imgSrcPixels = []; // packed ARGB of source image
+var imgPixels = [];    // packed ARGB of sorted image
  
- // threshold values to determine sorting start and end pixels
- var blackValue;
- var brightnessValue;
- var whiteValue;
+// threshold values to determine sorting start and end pixels
+var blackValue;
+var brightnessValue;
+var whiteValue;
  
- var row = 0;
- var column = 0;
+var row = 0;
+var column = 0;
  
- var paramsDiv;
+var paramsDiv;
 
- var startSort = false;
+var startSort = false;
+
+var osc;
+
+
 
 function preload() 
 {
@@ -57,42 +46,32 @@ function preload()
 
 // setup() function is called once when the program starts
 function setup() {
-  // place our canvas, making it fit our container
-  canvasContainer = $("#canvas-container");
-  let canvas = createCanvas(imgSrc.width, imgSrc.height);
-  canvas.parent("canvas-container");
-  // resize canvas is the page is resized
-  $(window).resize(function() {
-      console.log("Resizing...");
-      resizeCanvas(imgSrc.width, imgSrc.height);
-  });
+    // place our canvas, making it fit our container
+    canvasContainer = $("#canvas-container");
+    let canvas = createCanvas(imgSrc.width, imgSrc.height);
+    canvas.parent("canvas-container");
+    // resize canvas is the page is resized
+    $(window).resize(function() {
+        console.log("Resizing...");
+        resizeCanvas(imgSrc.width, imgSrc.height);
+    });
 
-  var centerHorz = windowWidth / 2;
-  var centerVert = windowHeight / 2;
-  //createCanvas(  );
-  pixelDensity( 1 );
-  cursor( HAND );
-  paramsDiv = createDiv('...');
-  paramsDiv.style("position", "absolute");
-  paramsDiv.style("width", "100%");
-  paramsDiv.style("bottom", 0);
-  paramsDiv.style("font-family", "Verdana");
-  paramsDiv.style("font-size", 12);
-  paramsDiv.style("color", "#fff");
-  paramsDiv.style("text-shadow", "1px 1px 0 #000");
-  paramsDiv.style("text-align", "center");
-  
-  imgSrc.loadPixels();
-  for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
-    imgSrcPixels[int(i/4)] = (255 << 24) | (imgSrc.pixels[i] << 16) | (imgSrc.pixels[i+1] << 8) | (imgSrc.pixels[i+2]);
-    //print("source" + imgSrcPixels[int(i/4)]);
-  }
-  imgSrc.updatePixels();
+    var centerHorz = windowWidth / 2;
+    var centerVert = windowHeight / 2;
+    //createCanvas(  );
+    pixelDensity( 1 );
+    cursor( HAND );
+    
+    imgSrc.loadPixels();
+    for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
+        imgSrcPixels[int(i/4)] = (255 << 24) | (imgSrc.pixels[i] << 16) | (imgSrc.pixels[i+1] << 8) | (imgSrc.pixels[i+2]);
+    }
+    imgSrc.updatePixels();
+    
+    
 
-  loadPixels();
-  
-  updateParams();
-  imgPixels = imgSrcPixels.slice();
+    loadPixels();
+    imgPixels = imgSrcPixels.slice();
     var imageBytes = 4*(imgSrc.width*imgSrc.height);
     var i = 0;
     while (i < imageBytes) {
@@ -130,38 +109,9 @@ function setup() {
  function mouseClicked() 
  {
     startSort = true;
- }
- 
- function mouseMoved() 
- {
-     updateParams();
- }
- 
- function updateParams() 
- {
-    // -16777216 == 0b 11111111 00000000 00000000 00000000
-    //         0 == 0b 00000000 00000000 00000000 00000000 
-    //       255 == 0b 00000000 00000000 00000000 11111111
-     if (mode === 0) {
-         blackValue = int(map(mouseX, 0, width - 1, -16777216, 0));
-     } else if (mode == 1) {
-         brightnessValue = int(map(mouseX, 0, width - 1, 0, 255));
-     } else if (mode == 2) {
-         whiteValue = int(map(mouseX, 0, width - 1, -16777216, 0));
-     }
-   
-   var params = "";
-     if (mode === 0) {
-         params = "mode: 0 - blackValue: " + blackValue;
-     } else if (mode == 1) {
-         params = "mode: 1 - brightnessValue: " + brightnessValue;
-     } else if (mode == 2) {
-         params = "mode: 2 - whiteValue: " + whiteValue;
-     }
- 
-   if (paramsDiv) {
-        paramsDiv.html( params );
-   }
+    osc = new p5.Oscillator();
+    osc.setType("sine");
+    osc.start();
  }
  
  var sortArea = 100;
@@ -169,31 +119,42 @@ function setup() {
     // select random point in image
     var posX = round(random(imgSrc.width-sortArea));
     var posY = round(random(imgSrc.height-sortArea));
-    print("sorting area at: (" + posX + ", " + posY + ")\n");
+    //print("sorting area at: (" + posX + ", " + posY + ")\n");
 
     //get array array of effected area
     var iRow;
     var pixelArr = [];
+    var highHue = 0;
+    var lowHue = 0;
+    var highLight = 0;
+    var lowLight = 0;
 
     for (var i = 0; i < sortArea * sortArea; i += sortArea) {
         var inUnsorted = [];
         iRow = (posY + (i/sortArea)) * imgSrc.width;
         for (var j = 0; j < sortArea; j++) {
             var pixRGB = imgPixels[iRow+posX+j];
-            if (i==0 && j==0) print("RGB Before: " + (pixRGB >> 16 & 255) + " - " + (pixRGB >> 8 & 255) + " - " + (pixRGB & 255));
+            //if (i==0 && j==0) print("RGB Before: " + (pixRGB >> 16 & 255) + " - " + (pixRGB >> 8 & 255) + " - " + (pixRGB & 255));
             pixelArr[i+j] = rgbToHsl((pixRGB >> 16 & 255), (pixRGB >> 8 & 255), (pixRGB & 255));
             //print("RGBA: " + (imgPixels[iRow+posX+j] >> 16 & 255) + ", " + (imgPixels[iRow+posX+j] >> 8 & 255) + ", " + (imgPixels[iRow+posX+j] & 255) + ", ");
         }
     }
 
+    var numsort = 0;
+    var avgHueDif = 0;
+    var avgLightDif = 0;
     // sort that area by hue
     function hueComp(h1, h2) {
+        numsort += 1;
+        avgHueDif += Math.abs(h1[0] - h2[0]);
+        avgLightDif += Math.abs(h1[2] - h2[2]);
+        
         if (h1[0] === h2[0]) {
-            if (h1[1] === h2[1]) {
+            if (h1[2] === h2[2]) {
                 return 0;
             }
             else {
-                return (h1[1] < h2[1]) ? -1 : 1;
+                return (h1[2] < h2[2]) ? -1 : 1;
             }
         }
         else {
@@ -202,6 +163,13 @@ function setup() {
     }
 
     pixelArr.sort(hueComp);
+
+    avgHueDif = avgHueDif/numsort;
+    avgLightDif = avgLightDif/numsort;
+    print(avgHueDif + "<--Hue . Light-->" + avgLightDif);
+    osc.amp(map(avgLightDif,0,0.1,0,1));
+    osc.freq(map(avgHueDif, 0,0.05,60,150));
+
     /*
     for(var i = 0; i < sortArea * sortArea; i += sortArea) {
         
@@ -220,7 +188,7 @@ function setup() {
         for (var j = 0; j < sortArea; j++) {
             //print("setting a pixel\n")
             var pixRGBarr = hslToRgb(pixelArr[i+j][0], pixelArr[i+j][1], pixelArr[i+j][2]);
-            if (i==0 && j==0) print("RGB After: " + pixRGBarr[0] + " - " + pixRGBarr[1] + " - " + pixRGBarr[2]);
+            //if (i==0 && j==0) print("RGB After: " + pixRGBarr[0] + " - " + pixRGBarr[1] + " - " + pixRGBarr[2]);
             //print()
             var pixRGB = (255 << 24) | (pixRGBarr[0] << 16) | ((pixRGBarr[1]) << 8) | pixRGBarr[2];
             

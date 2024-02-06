@@ -90,7 +90,6 @@ function setup() {
   loadPixels();
   
   updateParams();
-  /*
   imgPixels = imgSrcPixels.slice();
     var imageBytes = 4*(imgSrc.width*imgSrc.height);
     var i = 0;
@@ -102,7 +101,7 @@ function setup() {
         pixels[i++] = 255;
     }
     updatePixels();
-    */
+    
 }
  
  
@@ -143,7 +142,7 @@ function setup() {
  
  function mouseClicked() 
  {
-    imgPixels = imgSrcPixels.slice();
+    //imgPixels = imgSrcPixels.slice();
     hueSort();
     var imageBytes = 4*(imgSrc.width*imgSrc.height);
     var i = 0;
@@ -200,14 +199,13 @@ function setup() {
     var iRow;
     var unsorted = [];
 
-    for (var i = 0; i < sortArea; i++) {
+    for (var i = 0; i < sortArea * sortArea; i += sortArea) {
         var inUnsorted = [];
-        iRow = (posY + i) * imgSrc.width;
+        iRow = (posY + (i/sortArea)) * imgSrc.width;
         for (var j = 0; j < sortArea; j++) {
-            inUnsorted[j] = imgPixels[iRow+posX+j];
+            unsorted[i+j] = imgPixels[iRow+posX+j];
             //print("RGBA: " + (imgPixels[iRow+posX+j] >> 16 & 255) + ", " + (imgPixels[iRow+posX+j] >> 8 & 255) + ", " + (imgPixels[iRow+posX+j] & 255) + ", ");
         }
-        unsorted[i] = inUnsorted;
     }
     for (var i = 0; i < sortArea; i++) {
         for (var j = 0; j < sortArea; j++) {
@@ -218,22 +216,22 @@ function setup() {
     // sort that area by hue
     var sorted = [];
     
-    for(var i = 0; i < sortArea; i++) {
-        sorted[i] = [];
+    for(var i = 0; i < sortArea * sortArea; i += sortArea) {
+         
         for(var j = 0; j < sortArea; j++) {
             //print("setting area to " + unsorted[0][0] + "\n");
-            sorted[i][j] = unsorted[j][i];
+            sorted[i+j] = unsorted[0];
         }
     }
     
 
     // set sorted area
-    for (var i = 0; i < sortArea; i++) {
-        iRow = (posY + i) * imgSrc.width;
+    for (var i = 0; i < sortArea * sortArea; i += sortArea) {
+        iRow = (posY + (i/sortArea)) * imgSrc.width;
         //row
         for (var j = 0; j < sortArea; j++) {
             //print("setting a pixel\n")
-            imgPixels[iRow+posX+j] = sorted[i][j];
+            imgPixels[iRow+posX+j] = sorted[i+j];
         }
     }
 

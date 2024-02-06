@@ -169,16 +169,6 @@ function setup() {
     print(avgHueDif + "<--Hue . Light-->" + avgLightDif);
     osc.amp(map(avgLightDif,0,0.1,0,1));
     osc.freq(map(avgHueDif, 0,0.05,60,150));
-
-    /*
-    for(var i = 0; i < sortArea * sortArea; i += sortArea) {
-        
-        for(var j = 0; j < sortArea; j++) {
-            //print("setting area to " + unsorted[0][0] + "\n");
-            pixelArr[i+j] = pixelArr[0];
-        }
-    }
-    */
     
 
     // set sorted area
@@ -188,12 +178,7 @@ function setup() {
         for (var j = 0; j < sortArea; j++) {
             //print("setting a pixel\n")
             var pixRGBarr = hslToRgb(pixelArr[i+j][0], pixelArr[i+j][1], pixelArr[i+j][2]);
-            //if (i==0 && j==0) print("RGB After: " + pixRGBarr[0] + " - " + pixRGBarr[1] + " - " + pixRGBarr[2]);
-            //print()
             var pixRGB = (255 << 24) | (pixRGBarr[0] << 16) | ((pixRGBarr[1]) << 8) | pixRGBarr[2];
-            
-            //if (i==0 && j==0) print("RGB After: " + (pixRGB >> 16 & 255) + " - " + (pixRGB >> 8 & 255) + " - " + (pixRGB & 255));
-            //(255 << 24) | (imgSrc.pixels[i] << 16) | (imgSrc.pixels[i+1] << 8) | (imgSrc.pixels[i+2])
             imgPixels[iRow+posX+j] = pixRGB;
         }
     }

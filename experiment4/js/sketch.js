@@ -149,8 +149,8 @@ function hueSort() {
     avgHueDif = avgHueDif/numsort;
     avgLightDif = avgLightDif/numsort;
     print(avgHueDif + "<--Hue . Light-->" + avgLightDif);
-    osc.amp(map(avgLightDif,0,0.1,0,1));
-    osc.freq(map(avgHueDif, 0,0.05,60,150));
+    osc.amp(map(avgLightDif,0,0.05,0,0.8), 0.1);
+    osc.freq(map(avgHueDif, 0,0.05,50,1500), 0.1);
     
 
     // set sorted area

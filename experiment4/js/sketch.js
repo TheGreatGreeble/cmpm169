@@ -46,6 +46,8 @@ let canvasContainer;
  
  var paramsDiv;
 
+ var startSort = false;
+
 function preload() 
 {
     imgSrc = loadImage( imgSrcFileName );
@@ -105,26 +107,12 @@ function setup() {
 }
  
  
+
  function draw() 
  {
-    /*
-    
-    imgPixels = imgSrcPixels.slice();
-    row = 0;
-    column = 0;
- 
-     // loop through rows
-    while (row < height - 1) {
-        sortRow();
-        row++;
-    }
- 
-     // loop through columns
-    while (column < width - 1) {
-        sortColumn();
-        column++;
-    }
- 
+    if (!startSort) return;
+    hueSort();
+
     var imageBytes = 4*(imgSrc.width*imgSrc.height);
     var i = 0;
     while (i < imageBytes) {
@@ -136,24 +124,12 @@ function setup() {
     }
  
      updatePixels();
-     */
  }
  
  
  function mouseClicked() 
  {
-    //imgPixels = imgSrcPixels.slice();
-    hueSort();
-    var imageBytes = 4*(imgSrc.width*imgSrc.height);
-    var i = 0;
-    while (i < imageBytes) {
-        var col = imgPixels[int(i/4)];
-        pixels[i++] = col >> 16 & 255;
-        pixels[i++] = col >> 8 & 255;
-        pixels[i++] = col & 255;
-        pixels[i++] = 255;
-    }
-    updatePixels();
+    startSort = true;
  }
  
  function mouseMoved() 
@@ -253,57 +229,6 @@ function setup() {
             imgPixels[iRow+posX+j] = pixRGB;
         }
     }
- }
- 
- function sortRow() 
- {
-     // current row
-     var iRow = y * imgSrc.width;
-     var y = row;
- 
-     // where to start sorting
-     var x = 0;
- 
-     // where to stop sorting
-     var xend = 0;
- 
-     while (xend < width - 1) {
-         switch (mode) {
-             case 0:
-                 x = getFirstNotBlackX(x, y);
-                 xend = getNextBlackX(x, y);
-                 break;
-             case 1:
-                 x = getFirstBrightX(x, y);
-                 xend = getNextDarkX(x, y);
-                 break;
-             case 2:
-                 x = getFirstNotWhiteX(x, y);
-                 xend = getNextWhiteX(x, y);
-                 break;
-             default:
-                 break;
-         }
- 
-         if (x < 0) break;
- 
-         var sortLength = xend - x;
- 
-         var unsorted = [];
-         var sorted = [];
- 
-         for (var i = 0; i < sortLength; i++) {
-             unsorted[i] = imgPixels[x + i + iRow];
-         }
- 
-         sorted = sort(unsorted);
- 
-         for (var i = 0; i < sortLength; i++) {
-             imgPixels[x + i + iRow] = sorted[i];
-         }
- 
-         x = xend + 1;
-     }
  }
 
  // RGB to HSL conversion taken from https://gist.github.com/mjackson/5311256

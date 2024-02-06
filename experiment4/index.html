@@ -2,7 +2,7 @@
 <html>
 <head>
 	<!-- This title is used for tabs and bookmarks -->
-	<title>Experiment X - Subject/Topic</title>
+	<title>Experiment 4 - Images/Video and Sound art: Hue Sorting</title>
 
 	<!-- Use UTF character set, a good idea with any webpage -->
 	<meta charset="UTF-8" />
@@ -30,48 +30,60 @@
 	<!-- Style this page by changing the CSS in ../css/site.css or css/experiment.css -->
 	<main id="content">
 		<section>
-			<h1>Experiment X - Subject/Topic</h1>
+			<h1>Experiment 4 - Images/Video and Sound art: Hue Sorting</h1>
 			<div class="minor-section">
 				<h2>Imitate</h2>
-				<p>To develop artistic creativity in coding, it can be helpful to start by studying and learning from existing examples. This might involve reviewing code written by others, analyzing successful techniques, or even copying and modifying code to better understand how it works. By imitating and learning from existing techniques and strategies, we can gain a better understanding of what has been done before and what is possible, and identify opportunities for improvement and innovation.</p>
-				<p>What code did you start with? (You don't need to provide the code itself, but where did you start?) Document this step briefly.</p>
-				<p>found someones code to sort an images pixels</p>
-				<p>thought it would be fun to sort my dog (inhumane)</p>
-				<p>the code was a bit dense, but I eventually figured out how to work with individual pixels very efficiently by packing rgb values</p>
+				<p>I was initially interested in pieces that manipulated images. This which led me to a very interesting work, done by <a href="https://openprocessing.org/sketch/422167">Antonio Belluscio</a>, which sorted the pixels in an image.</p>
+				<img class="image" src="../Documentation/E4/0_imageSorting.PNG">
+				<img class="image" src="../Documentation/E4/0_imageSorting1.PNG">
+				<p>thought it would be a fun project to sort my beautiful and photogenic 17 year old Chihuahua: Mac</p>
+				<img class="image" src="../img/MacEssence.jpg">
+				<p>the code was a bit dense, but I eventually figured out that it works with individual pixels by packing RGBA values into single 32bit integers which it stores in an array.</p>
+				<img class="image" src="../Documentation/E4/2_packing.PNG">
+				<p>I got the sorting code to work on the webpage with Mac and started thinking of ways I could mess with it.</p>
+				<img class="image" src="../Documentation/E4/1_macSorted.PNG">
 			</div>
 
 			<div class="minor-section">
 				<h2>Integrate</h2>
-				<p>After learning from existing techniques and strategies, we can build upon that foundation by combining elements from different sources. This might involve combining elements from different programming languages, using libraries or frameworks in new ways, or bringing together techniques from different fields or disciplines. By integrating and combining elements from different sources, we can create something new and unique.</p>
-				<p>How did you extend the code or combine with another technique to make something new? Document this step.</p>
-				<p>the original sorted a column by column then row by row, I wanted to make it only sort by a set area at a time.</p>
-				<p>sorting by hue</p>
-				<p>imported a hue to rgb converter</p>
-				<p></p>
+				<p>First, I needed to figure out how to actually edit and swap around the pixels once they are packed</p>
+				<p>I started out by manually changing the pixels. I would pack new RGBA values into an int myself, then load them into the canvas pixels</p>
+				<img class="image" src="../Documentation/E4/3_editPixels1.PNG">
+				<img class="image" src="../Documentation/E4/4_editPixels2.PNG">
+				<p>however this would prove to be a bit unnecessary, as I could just re-arrange the array of packed ints, which is how the original code did it</p>
+				<br>
+				<p>the original sorted the entire images pixels column by column and row by row, I wanted to make it only sort by a set area at a time.</p>
+				<p>I came up with selecting a random point in the image, then taking in every pixel in a box coming from that point and putting it in a 2d array</p>
+				<img class="image" src="../Documentation/E4/6_areaSelect2.PNG">
+				<p>I tested grabbing the area by swapping the x/y coordinates of all the pixels in the array</p>
+				<img class="image" src="../Documentation/E4/5_areaSelect1.PNG">
+				<p>now I could grab an area of pixels I needed to figure out how to properly sort them. As it turns out sorting assorted RGB colors in a 2D visually pleasing way is a bit of a problem, as it needs to sort by three distinct values.</p>
+				<p>After some research I decided I would try to sort my pixels by hue, HSL format, because its much easier to get similar colors with just the first hue value.</p>
+				<p>I found a javascript converter from RGB to HSL, by <a href="https://gist.github.com/mjackson/5311256">Michael Jackson</a>, so that I could work with my RGB pixels in HSL</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Innovate</h2>
-				<p>Finally, we can introduce new or original ideas to our coding process by thinking creatively and pushing the boundaries. This might involve developing entirely new techniques or approaches, or using existing techniques in new and creative ways. By innovating and introducing new ideas, we can create art that is truly groundbreaking.</p>
-				<p>How did you use the code as a jumping off point to create something truly unique and novel? Document this step thoroughly.</p>
-				<p>huesort packs pixels in hsl format, sorts them using a custom compare function, then converts back into rgb to update the pixels</p>
-				<p>at first I made this happen on click, but eventually I switched it to happen on drawing the frame</p>
-				<p>made sound oscillate based on average difference values during a single areasort</p>
-				<p>this makes the sound start chaotically, but level out as the image becomes more and more sorted</p>
+				<p>To make my HueSort function, I first needed store my RGB values as HSL. I also decided to convert from my 2D array (for columns and rows) to a 1D array as it's much easier to sort.</p>
+				<img class="image" src="../Documentation/E4/10_trueHueSort2.PNG">
+				<p>I then do an array.sort() with a custom comparator function that sorts by the hue value, then the lightness value if they match. Finally, we convert the newly sorted array back to RGB values and updated our pixels</p>
+				<img class="image" src="../Documentation/E4/11_trueHueSort3.PNG">
+				<img class="image" src="../Documentation/E4/12_trueHueSort4.PNG">
+				<p>at first I made this happen on click, but eventually I switched it to sorting a single small area once every frame</p>
+				<img class="image" src="../Documentation/E4/9_trueHueSort1.PNG">
+				<p>For sound, I wanted to to reflect the sorting of the image by playing sound that would oscillate in frequency by how un-sorted each area was.</p>
+				<p>I already had my custom comparator function that was running through every comparison, so I averaged out the differences in hue and lightness in each comparison, and changed the amplitude and frequency of a constant oscillating sound based on those numbers</p>
+				<img class="image" src="../Documentation/E4/13_Sound1.PNG">
+				<p>What you end up with is the frequency chaotically changing at first when the image is unsorted, but as the hues are seperated, the average difference in each area lowers, and the sound becomes more level and lower frequency. And just as well in the image, as the pixels fall into hue order, the image slows down it's changes and tends toward a certain shape.</p>
+				<img class="image" src="../Documentation/E4/14_finalProduct.PNG">
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment. Here's where you can put your reflections.</p>
-				<ul>
-					<li>What part of the project you contributed</li>
-						everything
-					<li>A reflection on your work and the work of the team</li>
-					<p>this experiment took me to a lot of cool places. </p>
-					<li>Brief highs and lows</li>
-					<p>by far the hardest part was figuring out how to work with the pixel bit-packing.</p>
-					<p>once I got over that hump the rest came fairly quickly.</p>
-				</ul>
+				<p>this experiment took me to a lot of cool places. I spent q hile trying to figure out the problem of color sorting, I very nearly went with another method, I found on an <a href="https://www.alanzucconi.com/2015/09/30/colour-sorting/">article</a> covering the topic, using Hilbert Curves to map in higher dimensions, but the link to how that worked was broken and I couldn't figure out how I would reverse engineer that without an extra week to do it.</p>
+				<p>In the end, I really like the hue sort I ended up with, it looks really weird, and although it doesn't perfectly sort it visually, I think it does look really cool, and the sounds I got it to make are so much fun to listen to.</p>
+				<p>by far the hardest part was figuring out how to work with the pixel bit-management. Packing and unpacking the pixels was mostly already written, but converting it into HSL, working across a 1 dimensional array, and converting back into packed RGB pixels made me stop and scratch my head for a long time. </p>
+				<p>once I got over that hump the rest came fairly quickly.</p>
 			</div>
 
 			<div class="minor-section">
@@ -82,7 +94,13 @@
 			</div>
 		</section>
 		<nav id="links">
-			<!-- Put links to other pages (including the homepage) here. -->
+			<ul>
+				<li><a href="../index.html">Home</a></li>
+				<li><a href="https://openprocessing.org/sketch/422167">Antonio Belluscio's original image pixal sorter</a></li>
+				<li><a href="https://gist.github.com/mjackson/5311256">Michael Jackson's RGB to HSL converter code</a></li>
+
+				
+			</ul>
 		</nav>
 	</main>
 </body>

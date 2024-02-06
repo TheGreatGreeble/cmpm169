@@ -37,7 +37,11 @@ function preload()
 // setup() function is called once when the program starts
 function setup() {
     // place our canvas, making it fit our container
+    
+    pixelDensity( 1 );
     canvasContainer = $("#canvas-container");
+    canvasContainer.width = imgSrc.width;
+    canvasContainer.height = imgSrc.width;
     let canvas = createCanvas(imgSrc.width, imgSrc.height);
     canvas.parent("canvas-container");
     // resize canvas is the page is resized
@@ -45,11 +49,9 @@ function setup() {
         console.log("Resizing...");
         resizeCanvas(imgSrc.width, imgSrc.height);
     });
-
-    var centerHorz = windowWidth / 2;
-    var centerVert = windowHeight / 2;
+    
+    
     //createCanvas(  );
-    pixelDensity( 1 );
     cursor( HAND );
     
     imgSrc.loadPixels();

@@ -188,7 +188,7 @@ function setup() {
    }
  }
  
- var sortArea = 60;
+ var sortArea = 100;
  function hueSort() {
     // select random point in image
     var posX = round(random(imgSrc.width-sortArea));
@@ -197,32 +197,44 @@ function setup() {
 
     //get array array of effected area
     var iRow;
-    var unsorted = [];
+    var pixelArr = [];
 
     for (var i = 0; i < sortArea * sortArea; i += sortArea) {
         var inUnsorted = [];
         iRow = (posY + (i/sortArea)) * imgSrc.width;
         for (var j = 0; j < sortArea; j++) {
-            unsorted[i+j] = imgPixels[iRow+posX+j];
+            var pixRGB = imgPixels[iRow+posX+j];
+            if (i==0 && j==0) print("RGB Before: " + (pixRGB >> 16 & 255) + " - " + (pixRGB >> 8 & 255) + " - " + (pixRGB & 255));
+            pixelArr[i+j] = rgbToHsl((pixRGB >> 16 & 255), (pixRGB >> 8 & 255), (pixRGB & 255));
             //print("RGBA: " + (imgPixels[iRow+posX+j] >> 16 & 255) + ", " + (imgPixels[iRow+posX+j] >> 8 & 255) + ", " + (imgPixels[iRow+posX+j] & 255) + ", ");
-        }
-    }
-    for (var i = 0; i < sortArea; i++) {
-        for (var j = 0; j < sortArea; j++) {
-            //print("(" + i + ", " + j + "):" + unsorted[i][j]);
         }
     }
 
     // sort that area by hue
-    var sorted = [];
-    
-    for(var i = 0; i < sortArea * sortArea; i += sortArea) {
-         
-        for(var j = 0; j < sortArea; j++) {
-            //print("setting area to " + unsorted[0][0] + "\n");
-            sorted[i+j] = unsorted[0];
+    function hueComp(h1, h2) {
+        if (h1[0] === h2[0]) {
+            if (h1[1] === h2[1]) {
+                return 0;
+            }
+            else {
+                return (h1[1] < h2[1]) ? -1 : 1;
+            }
+        }
+        else {
+            return (h1[0] < h2[0]) ? -1 : 1;
         }
     }
+
+    pixelArr.sort(hueComp);
+    /*
+    for(var i = 0; i < sortArea * sortArea; i += sortArea) {
+        
+        for(var j = 0; j < sortArea; j++) {
+            //print("setting area to " + unsorted[0][0] + "\n");
+            pixelArr[i+j] = pixelArr[0];
+        }
+    }
+    */
     
 
     // set sorted area
@@ -231,12 +243,15 @@ function setup() {
         //row
         for (var j = 0; j < sortArea; j++) {
             //print("setting a pixel\n")
-            imgPixels[iRow+posX+j] = sorted[i+j];
+            var pixRGBarr = hslToRgb(pixelArr[i+j][0], pixelArr[i+j][1], pixelArr[i+j][2]);
+            if (i==0 && j==0) print("RGB After: " + pixRGBarr[0] + " - " + pixRGBarr[1] + " - " + pixRGBarr[2]);
+            //print()
+            var pixRGB = (255 << 24) | (pixRGBarr[0] << 16) | ((pixRGBarr[1]) << 8) | pixRGBarr[2];
+            
+            //if (i==0 && j==0) print("RGB After: " + (pixRGB >> 16 & 255) + " - " + (pixRGB >> 8 & 255) + " - " + (pixRGB & 255));
+            //(255 << 24) | (imgSrc.pixels[i] << 16) | (imgSrc.pixels[i+1] << 8) | (imgSrc.pixels[i+2])
+            imgPixels[iRow+posX+j] = pixRGB;
         }
-    }
-
-    for (var i = 0; i < 4*(imgSrc.width*imgSrc.height); i+=4) {
-        //imgPixels[int(i/4)] = (255 << 24) | (0 << 16) | (0 << 8) | (0);
     }
  }
  

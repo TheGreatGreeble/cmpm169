@@ -81,6 +81,8 @@ let myInstance;
 let canvasContainer;
 let sunImage;
 function preload() {
+    book = loadModel('./BookModel.obj');
+    bookTexture = loadImage('./BookTextures/book_open_low_1001_BaseColor.png');
     macImage = loadImage('./macEssence.jpg');
     sunImage = macImage;
     mercuryImage = macImage;
@@ -127,6 +129,11 @@ var testGo = false;
 function draw() {
 	orbitControl(); 
 	background(100);
+    push();
+    normalMaterial();
+    texture(bookTexture);
+    model(book);
+    pop();
     if (macComet.y >= 200) testGo = true;
     else if (macComet.y < -200) testGo = false;;
     if (testGo) {

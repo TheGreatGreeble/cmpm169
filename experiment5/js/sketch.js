@@ -51,19 +51,24 @@ class solarSystem{
 }
 
 class starParticle{
-    constructor(pos, vel, des, speed, r, img){
+    constructor(pos, vel, des, speed, r, col, img){
 		this.pos = pos; // current position vector
         this.vel = vel; // current velocity
 		this.des = des; // desired position
 		this.speed = speed;
         this.r = r;
-		this.img=img
+		this.col = col;
+		this.img = img;
 		this.done = false;
 		this.watch = 2000;
 	}
 	show(){
         push();
-        normalMaterial();
+        //normalMaterial();
+		noStroke();
+		ambientLight(0);
+		emissiveMaterial(this.col);
+		//specularMaterial(100);
 		if (this.done == false) {
 			if (this.watch > 100) {
 				this.updateVelocity(0.2);
@@ -74,7 +79,7 @@ class starParticle{
 		}
 		translate(this.pos.x,this.pos.y,this.pos.z);
 		this.checkPos();
-        texture(this.img);
+        //texture(this.img);
         sphere(this.r);
         pop();
 	}
@@ -88,10 +93,12 @@ class starParticle{
 	updateVelocity(perc) {
 		var temp = p5.Vector.sub(this.des, this.pos);
 		this.vel.lerp(temp, perc);
-		this.vel.add((p5.Vector.random3D()).mult(this.speed));
+		var chaos = p5.Vector.random3D();
+		chaos = chaos.mult(this.speed);
+		this.vel.add(chaos);
 		this.vel.normalize();
 		this.vel.mult(lerp(-10,this.pos.dist(this.des),perc));
-		this.vel.limit(p5.Vector.dist(this.des,this.pos))
+		this.vel.limit(p5.Vector.dist(this.des,this.pos));
 
 	}
 	addVelocity() {
@@ -99,6 +106,28 @@ class starParticle{
     }
 	changeDes(vec) {
 		this.des = vec;
+	}
+}
+
+class starField {
+	constructor(num, shape, rad) {
+		this.num = num;
+		this.shape = shape;
+		this.rad = rad;
+		this.field = [];
+	}
+	show() {
+
+	}
+	setupField() {
+		for (part = 0; part < this.num; i++) {
+			this.field[part] = new starParticle(
+			createVector(0,0,0),
+			createVector(50,-50,100),
+			createVector(-200,0,0),
+			5,15,macImage
+			);
+		}
 	}
 }
 // Here is how you might set up an OOP p5.js project
@@ -147,6 +176,7 @@ function setup() {
 			createVector(0,0,0),
 			createVector(50,-50,100),
 			createVector(-200,0,0),
+			[0,0,255],
 			5,15,macImage
 		);
 	}
@@ -160,6 +190,11 @@ function setup() {
 	uranus = new solarSystem(1350,0,0,0,0,60,uranusImage);
 	neptune = new solarSystem(1650,0,0,0,0,60,neptuneImage);
 	space =  new solarSystem(0,0,0,0,0,2000,spaceImage);
+	drawSpace();
+	drawBook();
+
+	frameRate(60);
+	
 }
     
 var testGo = false;
@@ -167,18 +202,25 @@ var destY = 100;
 var yUP = true;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-	orbitControl(); 
+	
+	orbitControl();
+	
+	/*
+	for (iFrame = 0; iFrame < 12;iFrame++) {
+		drawComets();
+	}
+	*/
+	push();
+	drawComets();
+	if (frameCount > 9) {
+		pop();
+	}
+}
+
+function drawComets() {
 	//background(100);
-    push();
-	translate(0,150,80);
-	rotateX(90);
-	scale(10);
-    normalMaterial();
-    texture(bookTexture);
-    model(book);
-    pop();
-	space.show();
     
+    push();
 	//starDest.add(random(-50,50),random(-50,50),random(-50,50))
 	//starDest.limit(100);
 	starDest.rotate(3);
@@ -190,6 +232,7 @@ function draw() {
 	if (yUP) destY -= 2;
 	if (!yUP) destY += 2;
 	for (i = 0; i < 7; i++) {
+		fill(255,255,255);
 		comets[i].changeDes(createVector(starDest.x,destY,starDest.y));
 		comets[i].show();
 	}
@@ -197,33 +240,36 @@ function draw() {
 	sun.y = destY;
 	sun.z = starDest.y;
 	sun.show();
-    
-	/*
-	mercury.show();
-	mercury.rotateLeft();
-	mercury.orbitMercury();
-	venus.show();
-	venus.rotateLeft();
-	venus.orbitVenus();
-	earth.show();
-	earth.rotateLeft();
-	earth.orbitEarth();
-	mars.show();
-	mars.rotateLeft();
-	mars.orbitMars();
-	jupiter.show();
-	jupiter.rotateLeft();
-	jupiter.orbitJupiter();
-	saturn.show();
-	saturn.rotateLeft();
-	saturn.orbitSaturn();
-	uranus.show();
-	uranus.rotateLeft();
-	uranus.orbitUranus();
-	neptune.show();
-	neptune.rotateLeft();
-	neptune.orbitNeptune();
-	*/
+	pop();
 }
+
+function drawSpace() {
+	space.show();
+}
+
+function drawBook() {
+	push();
+	translate(0,150,80);
+	rotateX(90);
+	scale(10);
+    normalMaterial();
+	//specularMaterial(0);
+    texture(bookTexture);
+    model(book);
+	translate(0,-50,0);
+	pointLight(255,255,152,0,0,0);
+    pop();
+}
+
+function mouseDragged() {
+	//noLoop();
+	drawBook();
+	drawSpace();
+}
+
+function mouseReleased() {
+	loop();
+}
+
 
   

@@ -80,6 +80,7 @@ class starParticle{
 		this.checkPos();
         //texture(this.img);
         sphere(this.r);
+		//pointLight(255,255,152,0,0,0);
         pop();
 	}
 	checkPos() {
@@ -109,22 +110,45 @@ class starParticle{
 }
 
 class starField {
-	constructor(num, shape, rad) {
+	constructor(num, col, speed, rotSpeed, dist, rad) {
 		this.num = num;
-		this.shape = shape;
+		this.col = col;
+		this.speed = speed;
+		this.rotSpeed = rotSpeed;
 		this.rad = rad;
 		this.field = [];
+		this.fieldDest = createVector(0, random(50,dist));
+		this.destY = 80;
+		this.yUP = true;
 	}
 	show() {
-
+		push();
+		this.fieldDest.rotate(this.rotSpeed);
+		if (this.destY < -100) {
+			this.yUP = false;
+		} else if (this.destY > 80){
+			this.yUP = true;
+		}
+		if (this.yUP) this.destY -= 2;
+		if (!this.yUP) this.destY += 2;
+		pointLight(this.col,0,0,0);
+		for (var i = 0; i < this.num; i++) {
+			fill(255,255,255);
+			this.field[i].changeDes(createVector(this.fieldDest.x,this.destY,this.fieldDest.y));
+			this.field[i].show();
+		}
+		pop();
 	}
 	setupField() {
-		for (part = 0; part < this.num; i++) {
+		for (var part = 0; part < this.num; part++) {
 			this.field[part] = new starParticle(
-			createVector(0,0,0),
-			createVector(50,-50,100),
-			createVector(-200,0,0),
-			5,15,macImage
+				createVector(0,0,0),
+				createVector(50,-50,100),
+				createVector(-200,0,0),
+				this.col,
+				this.speed,
+				this.rad,
+				macImage
 			);
 		}
 	}
@@ -148,7 +172,7 @@ function preload() {
     suturnImage = macImage;
     uranusImage = macImage;
     neptuneImage = macImage;
-    spaceImage = loadImage('./sky.png');
+    spaceImage = loadImage('./sky2.jpg');
     angleMode(DEGREES);
 	
 }
@@ -169,26 +193,16 @@ function setup() {
 
 	angleMode(DEGREES);
     background(100);
-	starDest = createVector(0, 150);
-	for (i = 0; i < 7; i++) {
-		comets[i] = new starParticle(
-			createVector(0,0,0),
-			createVector(50,-50,100),
-			createVector(-200,0,0),
-			color(0,0,255),
-			5,15,macImage
-		);
-	}
-	sun= new solarSystem(0,0,0,0,0,1,sunImage);
-	mercury = new solarSystem(140,0,0,0,0,20,mercuryImage);
-	venus = new solarSystem(300,0,0,0,0,60,venusImage);
-	earth = new solarSystem(450,0,0,0,0,70,earthImage);
-	mars = new solarSystem(650,0,0,0,0,50,marsImage);
-	jupiter = new solarSystem(850,0,0,0,0,90,jupiterImage);
-	saturn = new solarSystem(1050,0,0,0,0,80,suturnImage);
-	uranus = new solarSystem(1350,0,0,0,0,60,uranusImage);
-	neptune = new solarSystem(1650,0,0,0,0,60,neptuneImage);
-	space =  new solarSystem(0,0,0,0,0,2000,spaceImage);
+
+	// num, col, speed, rotSpeed, dist, rad
+	field1 = new starField(3,color(255,0,0),8,3,120,15);
+	field1.setupField();
+	field2 = new starField(8,color(0,255,0),4,-3,80,10);
+	field2.setupField();
+	field3 = new starField(2,color(0,0,255),7,10,40,25);
+	field3.setupField();
+
+	space =  new solarSystem(0,0,0,0,0,10,spaceImage);
 	drawSpace();
 	ambientLight(30,30,255,255);
 	pointLight(255,255,152,0,0,0);
@@ -198,9 +212,7 @@ function setup() {
 	
 }
     
-var testGo = false;
-var destY = 100;
-var yUP = true;
+
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
 	if (!mouseIsPressed) {
@@ -220,49 +232,29 @@ function draw() {
 	}
 	*/
 	
-	drawComets();
+	field1.show();
+	field2.show();
+	field3.show();
 	
 }
 
 function drawComets() {
 	//background(100);
     
-    push();
-	
-	translate(0,0,80);
-	//starDest.add(random(-50,50),random(-50,50),random(-50,50))
-	//starDest.limit(100);
-	starDest.rotate(3);
-	if (destY < -100) {
-		yUP = false;
-	} else if (destY > 100){
-		yUP = true;
-	}
-	if (yUP) destY -= 2;
-	if (!yUP) destY += 2;
-	for (i = 0; i < 7; i++) {
-		fill(255,255,255);
-		comets[i].changeDes(createVector(starDest.x,destY,starDest.y));
-		comets[i].show();
-	}
-	sun.x = starDest.x;
-	sun.y = destY;
-	sun.z = starDest.y;
-	sun.show();
-	pop();
+    
 }
 
 function drawSpace() {
 	push();
 	normalMaterial();
 	texture(spaceImage);
-	sphere(4000);
+	sphere(800);
     pop();
 }
 
 function drawBook() {
 	push();
-	translate(0,150,80);
+	translate(0,150,0);
 	rotateX(90);
 	scale(10);
     normalMaterial();

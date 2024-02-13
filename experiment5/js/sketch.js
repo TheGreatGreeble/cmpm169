@@ -1,54 +1,6 @@
 // sketch.js - purpose and description here
 // Author: Your Name
 // Date:
-class solarSystem{
-	constructor(x,y,z,ry,ry2,r,img){
-		this.x=x
-		this.y=y
-		this.z=z
-		this.ry=ry
-		this.ry2=ry2
-		this.r=r
-		this.img=img
-	}
-	show(){
-        push();
-        normalMaterial();
-        rotateY(this.ry);
-        translate(this.x,this.y,this.z);
-        texture(this.img);
-        rotateY(this.ry2);
-        sphere(this.r);
-        pop();
-	}
-	rotateLeft(){
-		this.ry2+=2;
-	}
-	orbitMercury(){
-		this.ry-=15;
-	}
-	orbitVenus(){
-		this.ry-=13;
-	}
-	orbitEarth(){
-		this.ry-=10;
-	}
-	orbitMars(){
-		this.ry-=8;
-	}
-	orbitJupiter(){
-		this.ry-=5;
-	}
-	orbitSaturn(){
-		this.ry-=3;
-	}
-	orbitUranus(){
-		this.ry-=2;
-	}
-	orbitNeptune(){
-		this.ry-=1;
-	}
-}
 
 class starParticle{
     constructor(pos, vel, des, col, speed, r, img){
@@ -117,7 +69,7 @@ class starField {
 		this.rotSpeed = rotSpeed;
 		this.rad = rad;
 		this.field = [];
-		this.fieldDest = createVector(0, random(50,dist));
+		this.fieldDest = createVector(0, dist);
 		this.destY = random(30,80);
 		this.yUP = true;
 	}
@@ -195,17 +147,19 @@ function setup() {
     background(100);
 
 	// num, col, speed, rotSpeed, dist, rad
-	field1 = new starField(3,color(255,0,0),8,3,170,14);
+	field1 = new starField(3,color(255,0,0),8,3,100,14);
 	field1.setupField();
-	field2 = new starField(8,color(0,255,0),4,-3,100,10);
+	field2 = new starField(8,color(0,255,0),4,-3,70,10);
 	field2.setupField();
-	field3 = new starField(2,color(0,0,255),2,10,60,18);
+	field3 = new starField(2,color(0,0,255),2,10,30,18);
 	field3.setupField();
-
-	space =  new solarSystem(0,0,0,0,0,10,spaceImage);
+	field4 = new starField(1,color(255,255,255),1,1,250,5);
+	field4.setupField();
+	field5 = new starField(1,color(0,0,0),1,-1,250,5);
+	field5.setupField();
 	drawSpace();
 	ambientLight(30,30,255,255);
-	pointLight(255,255,152,0,0,0);
+	pointLight(255,255,230,0,0,0);
 	drawBook();
 
 	frameRate(60);
@@ -217,11 +171,11 @@ function setup() {
 function draw() {
 	if (!mouseIsPressed) {
 		//ambientLight(30,30,255,255);
-		pointLight(255,255,152,0,0,0);
+		pointLight(255,255,230,0,0,0);
 	} else if (mouseIsPressed){
 		drawSpace();
 		//ambientLight(30,30,255,255);
-		pointLight(255,255,152,0,0,0);
+		pointLight(255,255,230,0,0,0);
 		drawBook();
 	}
 	orbitControl();
@@ -231,7 +185,8 @@ function draw() {
 		drawComets();
 	}
 	*/
-	
+	field4.show();
+	field5.show();
 	field1.show();
 	field3.show();
 	field2.show();

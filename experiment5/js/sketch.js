@@ -51,7 +51,7 @@ class solarSystem{
 }
 
 class starParticle{
-    constructor(pos, vel, des, speed, r, col, img){
+    constructor(pos, vel, des, col, speed, r, img){
 		this.pos = pos; // current position vector
         this.vel = vel; // current velocity
 		this.des = des; // desired position
@@ -66,9 +66,8 @@ class starParticle{
         push();
         //normalMaterial();
 		noStroke();
-		ambientLight(0);
-		emissiveMaterial(this.col);
-		//specularMaterial(100);
+		//emissiveMaterial(this.col);
+		specularMaterial(250);
 		if (this.done == false) {
 			if (this.watch > 100) {
 				this.updateVelocity(0.2);
@@ -149,7 +148,7 @@ function preload() {
     suturnImage = macImage;
     uranusImage = macImage;
     neptuneImage = macImage;
-    spaceImage = macImage;
+    spaceImage = loadImage('./sky.png');
     angleMode(DEGREES);
 	
 }
@@ -176,7 +175,7 @@ function setup() {
 			createVector(0,0,0),
 			createVector(50,-50,100),
 			createVector(-200,0,0),
-			[0,0,255],
+			color(0,0,255),
 			5,15,macImage
 		);
 	}
@@ -191,6 +190,8 @@ function setup() {
 	neptune = new solarSystem(1650,0,0,0,0,60,neptuneImage);
 	space =  new solarSystem(0,0,0,0,0,2000,spaceImage);
 	drawSpace();
+	ambientLight(30,30,255,255);
+	pointLight(255,255,152,0,0,0);
 	drawBook();
 
 	frameRate(60);
@@ -202,7 +203,15 @@ var destY = 100;
 var yUP = true;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-	
+	if (!mouseIsPressed) {
+		//ambientLight(30,30,255,255);
+		pointLight(255,255,152,0,0,0);
+	} else {
+		drawSpace();
+		//ambientLight(30,30,255,255);
+		pointLight(255,255,152,0,0,0);
+		drawBook();
+	}
 	orbitControl();
 	
 	/*
@@ -210,17 +219,17 @@ function draw() {
 		drawComets();
 	}
 	*/
-	push();
+	
 	drawComets();
-	if (frameCount > 9) {
-		pop();
-	}
+	
 }
 
 function drawComets() {
 	//background(100);
     
     push();
+	
+	translate(0,0,80);
 	//starDest.add(random(-50,50),random(-50,50),random(-50,50))
 	//starDest.limit(100);
 	starDest.rotate(3);
@@ -244,7 +253,11 @@ function drawComets() {
 }
 
 function drawSpace() {
-	space.show();
+	push();
+	normalMaterial();
+	texture(spaceImage);
+	sphere(4000);
+    pop();
 }
 
 function drawBook() {
@@ -253,22 +266,10 @@ function drawBook() {
 	rotateX(90);
 	scale(10);
     normalMaterial();
-	//specularMaterial(0);
     texture(bookTexture);
     model(book);
-	translate(0,-50,0);
-	pointLight(255,255,152,0,0,0);
+	
     pop();
-}
-
-function mouseDragged() {
-	//noLoop();
-	drawBook();
-	drawSpace();
-}
-
-function mouseReleased() {
-	loop();
 }
 
 

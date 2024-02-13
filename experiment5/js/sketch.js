@@ -67,7 +67,7 @@ class starParticle{
         //normalMaterial();
 		noStroke();
 		//emissiveMaterial(this.col);
-		specularMaterial(250);
+		specularMaterial(100);
 		if (this.done == false) {
 			if (this.watch > 100) {
 				this.updateVelocity(0.2);
@@ -118,7 +118,7 @@ class starField {
 		this.rad = rad;
 		this.field = [];
 		this.fieldDest = createVector(0, random(50,dist));
-		this.destY = 80;
+		this.destY = random(30,80);
 		this.yUP = true;
 	}
 	show() {
@@ -195,11 +195,11 @@ function setup() {
     background(100);
 
 	// num, col, speed, rotSpeed, dist, rad
-	field1 = new starField(3,color(255,0,0),8,3,120,15);
+	field1 = new starField(3,color(255,0,0),8,3,170,14);
 	field1.setupField();
-	field2 = new starField(8,color(0,255,0),4,-3,80,10);
+	field2 = new starField(8,color(0,255,0),4,-3,100,10);
 	field2.setupField();
-	field3 = new starField(2,color(0,0,255),7,10,40,25);
+	field3 = new starField(2,color(0,0,255),2,10,60,18);
 	field3.setupField();
 
 	space =  new solarSystem(0,0,0,0,0,10,spaceImage);
@@ -218,7 +218,7 @@ function draw() {
 	if (!mouseIsPressed) {
 		//ambientLight(30,30,255,255);
 		pointLight(255,255,152,0,0,0);
-	} else {
+	} else if (mouseIsPressed){
 		drawSpace();
 		//ambientLight(30,30,255,255);
 		pointLight(255,255,152,0,0,0);
@@ -233,8 +233,8 @@ function draw() {
 	*/
 	
 	field1.show();
-	field2.show();
 	field3.show();
+	field2.show();
 	
 }
 

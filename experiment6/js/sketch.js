@@ -55,32 +55,32 @@ function setup() {
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
     xOff=1;
-  yOff=height-1;
+  	yOff=height-1;
 	var w4 = (width*4);
-  while(xOff<(width)){
+  	while(xOff<(width)){
 		r = round(cos(theta)*random(0,xOff));
 		var strt = yOff*w4;
 		var end = strt+(r<<2);
 		for(var i = end-12; i>strt; i-=12){
-				pixels[i+12]=pixels[i+5]=pixels[i+6]=pixels[i];
+			pixels[i+12]=pixels[i+5]=pixels[i+6]=pixels[i];
 		}//copy(0,yOff,r,1,  1,yOff,r,1); 
 		left = Math.max(0,xSeed-r);
 		remain = Math.max(0,(width-left));
 		strt = (yOff-1)*w4+(left*12)+w4;
 		end = strt+(remain*4);
 		for(var i = strt; i<end; i+=12){
-				pixels[i-w4]=pixels[i+1-w4]=pixels[i+2-w4]=pixels[i];
+			pixels[i-w4]=pixels[i+1-w4]=pixels[i+2-w4]=pixels[i];
 		}
-    //copy(left,yOff, remain,1,    left,yOff-1, remain,1);
-  	strt = (yOff*w4)+((width-r)*12);
+    	//copy(left,yOff, remain,1,    left,yOff-1, remain,1);
+  		strt = (yOff*w4)+((width-r)*12);
 		end = strt+(r*5);
 		for(var i = strt+12; i<end; i+=12){
-				pixels[i-12]=pixels[i-3]=pixels[i-2]=pixels[i];
-				pixels[i-12+w4]=pixels[i-3+w4]=pixels[i-2+w4]=pixels[i+w4];
+			pixels[i-12]=pixels[i-3]=pixels[i-2]=pixels[i];
+			pixels[i-12+w4]=pixels[i-3+w4]=pixels[i-2+w4]=pixels[i+w4];
 		}//copy(width-r,yOff,r,2,   width-r-1,yOff,r,2);
 		xOff++;
 		yOff--;
-  }
+  	}
 	updatePixels();
 	theta++;
 }

@@ -33,6 +33,14 @@ function setup() {
         console.log("Resizing...");
         resizeCanvas(canvasContainer.width(), canvasContainer.height());
     });
+
+	LoveButton = select("#Love");
+    LoveButton.mousePressed(spawnLove);
+	HateButton = select("#Hate");
+    HateButton.mousePressed(spawnHate);
+	HungyButton = select("#Hungy");
+    HungyButton.mousePressed(spawnHungy);
+	
     pixelDensity(1);
 	img = createGraphics(width,height);
 	xSeed = round(0.6*width);
@@ -44,12 +52,37 @@ function setup() {
 	img.fill(255);
 	img.textFont("myFont",145);
 	for(var y = 220; y<height; y+=230){
-		img.text("P O R T F O L I O", 130, y);
+		//img.text("P O R T F O L I O", 130, y);
 	}
 	image(img,0,0);
 	filter(THRESHOLD);
+	
     setFrameRate(30);
 	loadPixels();
+}
+function spawnLove() {
+	textToScreen("Love");
+}
+function spawnHate() {
+	textToScreen("Hate");
+}
+function spawnHungy() {
+	textToScreen("Hungy");
+}
+
+function textToScreen(str) {
+	textImg = createGraphics(width,height)
+	print("spawnText");
+	//pixelDensity(1);
+	//fill(0);
+	//textImg.noStroke();
+	img.fill(255);
+	img.textSize(32);
+	img.text(str, random(width), random(height));
+	//text(str, width/2, width/2);
+	image(img,0,0);
+	//filter(THRESHOLD);
+	//updatePixels();
 }
 
 // draw() function is called repeatedly, it's the main animation loop
@@ -62,25 +95,25 @@ function draw() {
 		var strt = yOff*w4;
 		var end = strt+(r<<2);
 		for(var i = end-12; i>strt; i-=12){
-			pixels[i+12]=pixels[i+5]=pixels[i+6]=pixels[i];
+			//pixels[i+12]=pixels[i+5]=pixels[i+6]=pixels[i];
 		}//copy(0,yOff,r,1,  1,yOff,r,1); 
 		left = Math.max(0,xSeed-r);
 		remain = Math.max(0,(width-left));
 		strt = (yOff-1)*w4+(left*12)+w4;
 		end = strt+(remain*4);
 		for(var i = strt; i<end; i+=12){
-			pixels[i-w4]=pixels[i+1-w4]=pixels[i+2-w4]=pixels[i];
+			//pixels[i-w4]=pixels[i+1-w4]=pixels[i+2-w4]=pixels[i];
 		}
     	//copy(left,yOff, remain,1,    left,yOff-1, remain,1);
   		strt = (yOff*w4)+((width-r)*12);
 		end = strt+(r*5);
 		for(var i = strt+12; i<end; i+=12){
-			pixels[i-12]=pixels[i-3]=pixels[i-2]=pixels[i];
-			pixels[i-12+w4]=pixels[i-3+w4]=pixels[i-2+w4]=pixels[i+w4];
+			//pixels[i-12]=pixels[i-3]=pixels[i-2]=pixels[i];
+			//pixels[i-12+w4]=pixels[i-3+w4]=pixels[i-2+w4]=pixels[i+w4];
 		}//copy(width-r,yOff,r,2,   width-r-1,yOff,r,2);
 		xOff++;
 		yOff--;
   	}
-	updatePixels();
+	//updatePixels();
 	theta++;
 }

@@ -80,7 +80,7 @@ function textToScreen(str) {
 	//fill(0);
 	//textImg.noStroke();
 	
-	img.textSize(32);
+	img.textSize(64);
 	img.text(str, random(width), random(height));
 	//text(str, width/2, width/2);
 	image(img,0,0);
@@ -88,9 +88,9 @@ function textToScreen(str) {
 	//updatePixels();
 }
 
-var rSpread = 0.01;
-var gSpread = 0.03;
-var bSpread = 0.01;
+var rSpread = 0.05;
+var gSpread = 0.15;
+var bSpread = 0.05;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
 	loadPixels();
@@ -154,28 +154,28 @@ function updatePix(r,g,b, i, a, spread) {
 	switch (random([0,1,2,3])) {
 		case 0:
 			//print("up");
-			var upPix = i - width;
+			var upPix = i - (width*4);
 			if (upPix < 0) break;
-			pixels[upPix] += round(pixels[i] * spread);
-			pixels[a - width] = 255;
+			pixels[upPix] += round(pixels[i] * spread*2);
+			//pixels[a - width] = 255;
 			break;
 		case 1:
 			var rightPix = i + 4;
 			if (rightPix > (4*width*height)) break;
-			pixels[rightPix] += round(pixels[i] * spread);
-			pixels[a + 4] = 255;
+			pixels[rightPix] += round(pixels[i] * spread*2);
+			//pixels[a + 4] = 255;
 			break;
 		case 2:
-			var downPix = i + width;
+			var downPix = i + (width*4);
 			if (downPix > (4*width*height)) break;
-			pixels[downPix] += round(pixels[i] * spread);
-			pixels[a + width] = 255;
+			pixels[downPix] += round(pixels[i] * spread*2);
+			//pixels[a + width] = 255;
 			break;
 		case 3:
 			var leftPix = i - 4;
 			if (leftPix < 0) break;
-			pixels[leftPix] += round(pixels[i] * spread);
-			pixels[a - 4] = 255;
+			pixels[leftPix] += round(pixels[i] * spread*2);
+			//pixels[a - 4] = 255;
 			break;
 		
 	}

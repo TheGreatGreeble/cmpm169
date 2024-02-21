@@ -94,7 +94,7 @@ var bSpread = 0.01;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
 	loadPixels();
-	print(pixels[0] + "/" + pixels[1] + "/" + pixels[2]);
+	//print(pixels[0] + "/" + pixels[1] + "/" + pixels[2]);
 	for (var i = 0; i < 4*(width*height); i+=4) {
 		var r = pixels[i];
 		var g = pixels[i+1];
@@ -151,29 +151,30 @@ function draw() {
 
 function updatePix(r,g,b, i, a, spread) {
 	//print("updatePix");
-	switch (random(0,3)) {
+	switch (random([0,1,2,3])) {
 		case 0:
+			//print("up");
 			var upPix = i - width;
 			if (upPix < 0) break;
-			pixels[upPix] += round(pixels[i] * 0.5);
+			pixels[upPix] += round(pixels[i] * spread);
 			pixels[a - width] = 255;
 			break;
 		case 1:
 			var rightPix = i + 4;
 			if (rightPix > (4*width*height)) break;
-			pixels[rightPix] += round(pixels[i] * 0.5);
+			pixels[rightPix] += round(pixels[i] * spread);
 			pixels[a + 4] = 255;
 			break;
 		case 2:
 			var downPix = i + width;
 			if (downPix > (4*width*height)) break;
-			pixels[downPix] += round(pixels[i] * 0.5);
+			pixels[downPix] += round(pixels[i] * spread);
 			pixels[a + width] = 255;
 			break;
 		case 3:
 			var leftPix = i - 4;
 			if (leftPix < 0) break;
-			pixels[leftPix] += round(pixels[i] * 0.5);
+			pixels[leftPix] += round(pixels[i] * spread);
 			pixels[a - 4] = 255;
 			break;
 		

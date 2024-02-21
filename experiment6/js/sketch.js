@@ -71,7 +71,7 @@ function spawnLove() {
 }
 function spawnHate() {
 	img.fill(255,20,20);
-	textToScreen("Hate");
+	textToScreen("Anger");
 }
 function spawnHungy() {
 	img.fill(20,255,20);
@@ -101,9 +101,9 @@ function textToScreen(str) {
 	image(img,0,0);
 }
 
-var rSpread = 0.3;
-var gSpread = 0.3;
-var bSpread = 0.3;
+var rSpread = 0.35;
+var gSpread = 0.35;
+var bSpread = 0.35;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
 	loadPixels();

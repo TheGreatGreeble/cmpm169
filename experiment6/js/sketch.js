@@ -47,7 +47,7 @@ function setup() {
     resetButton.mousePressed(reset);
 	
     pixelDensity(0.5);
-	fill(0);
+	fill(0,0,0);
 	noStroke();
 	rect(0,0,width,height);
 	img = createGraphics(width,height);

@@ -31,45 +31,48 @@
 			<h1>Experiment 6 - Text: Emotional Ecology</h1>
 			<div class="minor-section">
 				<h2>Imitate</h2>
-				<p>To develop artistic creativity in coding, it can be helpful to start by studying and learning from existing examples. This might involve reviewing code written by others, analyzing successful techniques, or even copying and modifying code to better understand how it works. By imitating and learning from existing techniques and strategies, we can gain a better understanding of what has been done before and what is possible, and identify opportunities for improvement and innovation.</p>
-				<p>What code did you start with? (You don't need to provide the code itself, but where did you start?) Document this step briefly.</p>
-				<p>started with code that distorts text</p>
-				<p>code was very confusing so I ended up barely using it</p>
+				<p>I was inspired by a piece of code I found by <a href="https://openprocessing.org/sketch/2083447"> Shylesh Kumar</a> that distorted the color values seperately in the text in text</p>
+				<img class="image" src="../Documentation/E6/01_text.PNG">
+				<p>I wanted to be able to spawn in new text, but quickly learned that the code was not set up to do this easily. The text was being drawn in setup on a new p5 graphic, loaded on to the canvas, then the canvas was edited pixel by pixel in draw. If I wanted to draw new text, I would have to redraw the graphic to the screen, which was causing me a lot of errors</p> 
+				<p>but I figured I'd start by making text first appear on the screen from a button, all the text is redrawn every time new text is added, however I had to disable the text distortion at first</p>
+				<img class="image" src="../Documentation/E6/02_generateText.PNG">
 			</div>
 
 			<div class="minor-section">
 				<h2>Integrate</h2>
-				<p>After learning from existing techniques and strategies, we can build upon that foundation by combining elements from different sources. This might involve combining elements from different programming languages, using libraries or frameworks in new ways, or bringing together techniques from different fields or disciplines. By integrating and combining elements from different sources, we can create something new and unique.</p>
-				<p>How did you extend the code or combine with another technique to make something new? Document this step.</p>
-				<p>thought it would be cool if you could spawn more text that would dissabate different colors</p>
-				<p>first step was getting text on the screen, bit more work then I thought</p>
-				<p>to keep adding text I made a seperate new img that I could repeatedly redraw to the screen with the same text</p>
-				<p>Added buttons to add the text</p>
-				<p>changed color of the text</p>
+				<p>I wanted to bring back the text dissapating into the rest of the canvas, so I first added color to the text, and edited the image pixel by pixel to spread the color</p>
+				<img class="image" src="../Documentation/E6/03_colorFade.PNG">
+				<div>
+					<img id="small" class="image" src="../Documentation/E6/03_colorFadeCode1.PNG">
+					<img id="small" class="image" src="../Documentation/E6/03_colorFadeCode2.PNG">
+				</div>
+				<p>the text was fading, however due to some simple issues with my switch statement and how I was drawing the background it didn't work at first. once I fixed those however, I successfully had text that was spreading its color through the canvas</p>
+				<img class="image" src="../Documentation/E6/05_colorSpreadWorking.PNG">
+				<p>it wasn't dissapating like in the original base code, I liked its almost viral like spreading across the canvas</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Innovate</h2>
-				<p>Finally, we can introduce new or original ideas to our coding process by thinking creatively and pushing the boundaries. This might involve developing entirely new techniques or approaches, or using existing techniques in new and creative ways. By innovating and introducing new ideas, we can create art that is truly groundbreaking.</p>
-				<p>How did you use the code as a jumping off point to create something truly unique and novel? Document this step thoroughly.</p>
-				<p>Now I wanted to make the text spread their color</p>
-				<p>made each pixel spread its highest colors</p>
-				<p>messed around with this for a while getting different results</p>
-				<p>eventually found this one where love overtakes hate, which overtakes hungy, which overtakes love, which resulted in a really cool ecology of these emotions mixing and fighting eachother.</p>
-				<p>changed hate and hungy to anger and hunger</p>
+				<p>when I started I had originally wanted the text to fully dissapate its color into the rest of the image, but I wanted to explore the viral spread effect more.</p>
+				<p>I decided to redraw the text every frame, that way it would never fade, and each bit of text would act like source for each color.</p>
+				<p> I also lowered the pixel density to lessen the lag that comes with editing each pixel</p>
+				<img id="small" class="image" src="../Documentation/E6/06_textSpread.PNG">
+				<p>I started fine tuning how each pixel spreads it's color. up till this point each pixel would spread each rgb value in one direction seperately, but this made the canvas gravitate towards one solid white color, consistently increasing the rgb values.</p>
+				<p>so I made colors also subtract from the other values when spreading, which created a very cool pattern of different colors overtaking and combining with others.</p>
+				<div>
+					<img id="small" class="image" src="../Documentation/E6/07_coolSpreadSpiralCode1.PNG">
+					<img id="small" class="image" src="../Documentation/E6/07_coolSpreadSpiralCode2.PNG">
+				</div>
+				<img id="small" class="image" src="../Documentation/E6/07_coolSpreadSpiral.PNG">
+				<p>I messed around with this for a while getting different results using different methods of how the pixels interact. But the idea of each color acting like a piece of an ecology, overtaking eachother in a balancing act fit the idea of represeting emotions with the text.</p>
+				<p>I eventually found my final method where love overtakes anger, which overtakes hunger, which overtakes love, which resulted in a really cool ecology of these emotions mixing and fighting eachother in spiral patterns across the page.</p>
+				<img id="small" class="image" src="../Documentation/E6/08_finalSpread.PNG">
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment. Here's where you can put your reflections.</p>
-				<ul>
-					<li>What part of the project you contributed</li>
-					<p>everything</p>
-					<li>A reflection on your work and the work of the team</li>
-					<p>working with that original code turned out to be a lot more difficult for what I wanted to do. Really liked the end result, looks legitimatly better then I initially thought it would.</p>
-					<li>Brief highs and lows</li>
-					<p>I didn't spend enough time on it and had to turn it in late which I hate doing. had to lower pixel density to make it barable to run.</p>
-				</ul>
+				<p>working with that original code turned out to be a lot more difficult for what I wanted to do. However, it also led me having to redraw the text multiple times, which become a key part of the final product. I Really liked the end result, looks a lot more interesting then I had initially thought it would. the constantly shifting nature of the colors is really fun to just stare at.</p>
+				<p>fine tuning the color interaction was really fun and I almost went with another version that created the stagnating crevices between the colors, but shfting spirals that came in the end were just too cool to pass up.</p>
 			</div>
 
 			<div class="minor-section">
@@ -85,7 +88,7 @@
 			</div>
 		</section>
 		<nav id="links">
-			<!-- Put links to other pages (including the homepage) here. -->
+			<a href="https://openprocessing.org/sketch/2083447"> base code I used by Shylesh Kumar</a>
 		</nav>
 	</main>
 </body>

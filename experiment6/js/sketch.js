@@ -129,7 +129,7 @@ function draw() {
 	image(img,0,0);
 }
 
-var dampener = 5;
+var dampener = 10;
 function updatePix(r,g,b, i, lD, rD, spread) {
 	var upPix = i - (width*4);
 	var rightPix = i + 4;

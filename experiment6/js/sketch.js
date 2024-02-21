@@ -61,22 +61,25 @@ function setup() {
 	loadPixels();
 }
 function spawnLove() {
+	img.fill(20,20,255);
 	textToScreen("Love");
 }
 function spawnHate() {
+	img.fill(255,20,20);
 	textToScreen("Hate");
 }
 function spawnHungy() {
+	img.fill(20,255,20);
 	textToScreen("Hungy");
 }
 
 function textToScreen(str) {
-	textImg = createGraphics(width,height)
+	img.pixels = pixels;
 	print("spawnText");
 	//pixelDensity(1);
 	//fill(0);
 	//textImg.noStroke();
-	img.fill(255);
+	
 	img.textSize(32);
 	img.text(str, random(width), random(height));
 	//text(str, width/2, width/2);
@@ -85,8 +88,35 @@ function textToScreen(str) {
 	//updatePixels();
 }
 
+var rSpread = 0.01;
+var gSpread = 0.03;
+var bSpread = 0.01;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
+	loadPixels();
+	print(pixels[0] + "/" + pixels[1] + "/" + pixels[2]);
+	for (var i = 0; i < 4*(width*height); i+=4) {
+		var r = pixels[i];
+		var g = pixels[i+1];
+		var b = pixels[i+2];
+		var a = pixels[i+3];
+		//print (r + "/" + g + "/" + b);
+		if (r > 0) {
+			//print("found Red");
+		}
+        if (r > 20) {
+			updatePix(r,g,b, i, a, rSpread);
+		}
+		if (g > 20) {
+			updatePix(r,g,b, i+1, a, gSpread);
+		}
+		if (b > 20) {
+			updatePix(r,g,b, i+2, a, bSpread);
+		}
+
+    }
+	updatePixels();
+	/*
     xOff=1;
   	yOff=height-1;
 	var w4 = (width*4);
@@ -116,4 +146,37 @@ function draw() {
   	}
 	//updatePixels();
 	theta++;
+	*/
+}
+
+function updatePix(r,g,b, i, a, spread) {
+	//print("updatePix");
+	switch (random(0,3)) {
+		case 0:
+			var upPix = i - width;
+			if (upPix < 0) break;
+			pixels[upPix] += round(pixels[i] * 0.5);
+			pixels[a - width] = 255;
+			break;
+		case 1:
+			var rightPix = i + 4;
+			if (rightPix > (4*width*height)) break;
+			pixels[rightPix] += round(pixels[i] * 0.5);
+			pixels[a + 4] = 255;
+			break;
+		case 2:
+			var downPix = i + width;
+			if (downPix > (4*width*height)) break;
+			pixels[downPix] += round(pixels[i] * 0.5);
+			pixels[a + width] = 255;
+			break;
+		case 3:
+			var leftPix = i - 4;
+			if (leftPix < 0) break;
+			pixels[leftPix] += round(pixels[i] * 0.5);
+			pixels[a - 4] = 255;
+			break;
+		
+	}
+	pixels[i] *= (1 - spread);
 }

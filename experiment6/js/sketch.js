@@ -75,7 +75,7 @@ function spawnHate() {
 }
 function spawnHungy() {
 	img.fill(20,255,20);
-	textToScreen("Hungy");
+	textToScreen("Hunger");
 }
 function goTime() {
 	
@@ -113,13 +113,13 @@ function draw() {
 			var g = pixels[i+1];
 			var b = pixels[i+2];
 			if (r + g + b == 295) continue;
-			if (r > 100 && r >= g) {
+			if (r > 100 && r >= b) {
 				updatePix(r,g,b, i, 2, 1, rSpread);
 			}
-			if (g > 100 && g >= b) {
+			if (g > 100 && g >= r) {
 				updatePix(r,g,b, i+1, -1, 1, gSpread);
 			} 
-			if (b > 100 && b >= r) {
+			if (b > 100 && b >= g) {
 				updatePix(r,g,b, i+2, -1, -2, bSpread);
 			}
 
@@ -129,7 +129,7 @@ function draw() {
 	image(img,0,0);
 }
 
-var dampener = 7;
+var dampener = 5;
 function updatePix(r,g,b, i, lD, rD, spread) {
 	var upPix = i - (width*4);
 	var rightPix = i + 4;

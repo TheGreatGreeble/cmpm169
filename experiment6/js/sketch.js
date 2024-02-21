@@ -45,13 +45,13 @@ function setup() {
     goTimeButton.mousePressed(goTime);
 	
     pixelDensity(0.5);
+	fill(0);
+	noStroke();
+	rect(0,0,width,height);
 	img = createGraphics(width,height);
 	xSeed = round(0.6*width);
     wSeed = width-xSeed;
 	img.pixelDensity(0.5);
-	img.fill(0);
-	img.noStroke();
-	img.rect(0,0,width,height);
 	img.fill(255);
 	img.textFont("myFont",145);
 	for(var y = 220; y<height; y+=230){
@@ -111,17 +111,18 @@ function draw() {
 			var b = pixels[i+2];
 			var a = pixels[i+3];
 			
-			if (r > 20 && r > g && r > b) {
+			if (r > 100 && r > g && r > b) {
 				updatePix(r,g,b, i, a, rSpread);
-			} else if (g > 20  && g > r && g > b) {
+			} else if (g > 100  && g > r && g > b) {
 				updatePix(r,g,b, i+1, a, gSpread);
-			} else if (b > 20  && b > r && b > g) {
+			} else if (b > 100  && b > r && b > g) {
 				updatePix(r,g,b, i+2, a, bSpread);
 			}
 
 		}
 	}
 	updatePixels();
+	image(img,0,0);
 }
 
 function updatePix(r,g,b, i, a, spread) {

@@ -43,6 +43,8 @@ function setup() {
     HungyButton.mousePressed(spawnHungy);
 	goTimeButton = select("#GoTime");
     goTimeButton.mousePressed(goTime);
+	resetButton = select("#Reset");
+    resetButton.mousePressed(reset);
 	
     pixelDensity(0.5);
 	fill(0);
@@ -81,42 +83,44 @@ function goTime() {
 	print("GOTIME" + isGoTime);
 	image(img,0,0);
 }
+function reset() {
+	push();
+	fill(0);
+	noStroke();
+	rect(0,0,width,height);
+	image(img,0,0);
+	pop();
+}
 
 function textToScreen(str) {
 	loadPixels();
 	img.pixels = pixels;
-	print("spawnText");
-	//pixelDensity(1);
-	//fill(0);
-	//textImg.noStroke();
 	
 	img.textSize(64);
 	img.text(str, random(width), random(height));
-	//text(str, width/2, width/2);
 	image(img,0,0);
-	//filter(THRESHOLD);
 }
 
-var rSpread = 0.1;
+var rSpread = 0.3;
 var gSpread = 0.3;
-var bSpread = 0.1;
+var bSpread = 0.3;
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
 	loadPixels();
-	//print(pixels[0] + "/" + pixels[1] + "/" + pixels[2]);
 	if (isGoTime) {
 		for (var i = 0; i < 4*(width*height); i+=4) {
 			var r = pixels[i];
 			var g = pixels[i+1];
 			var b = pixels[i+2];
-			var a = pixels[i+3];
-			
-			if (r > 100 && r > g && r > b) {
-				updatePix(r,g,b, i, a, rSpread);
-			} else if (g > 100  && g > r && g > b) {
-				updatePix(r,g,b, i+1, a, gSpread);
-			} else if (b > 100  && b > r && b > g) {
-				updatePix(r,g,b, i+2, a, bSpread);
+			if (r + g + b == 295) continue;
+			if (r > 100 && r >= g) {
+				updatePix(r,g,b, i, 2, 1, rSpread);
+			}
+			if (g > 100 && g >= b) {
+				updatePix(r,g,b, i+1, -1, 1, gSpread);
+			} 
+			if (b > 100 && b >= r) {
+				updatePix(r,g,b, i+2, -1, -2, bSpread);
 			}
 
 		}
@@ -125,33 +129,38 @@ function draw() {
 	image(img,0,0);
 }
 
-function updatePix(r,g,b, i, a, spread) {
-	//print("updatePix");
-	switch (random([0,1,2,3])) {
+var dampener = 7;
+function updatePix(r,g,b, i, lD, rD, spread) {
+	var upPix = i - (width*4);
+	var rightPix = i + 4;
+	var downPix = i + (width*4);
+	var leftPix = i - 4;
+	var add = pixels[i] * spread * (random(1,3));
+	var dir = random([0,1,2,3]);
+	switch (dir) {
 		case 0:
-			//print("up");
-			var upPix = i - (width*4);
 			if (upPix < 0) upPix = width*height*4 - upPix;
-			pixels[upPix] += pixels[i] * spread*2;
-			//pixels[a - width] = 255;
+			pixels[upPix] += add;
+			pixels[upPix+lD] -= add/dampener;
+			pixels[upPix+rD] -= add/dampener;
 			break;
 		case 1:
-			var rightPix = i + 4;
-			if (rightPix > (4*width*height)) break;
-			pixels[rightPix] += pixels[i] * spread;
-			//pixels[a + 4] = 255;
+			if (rightPix > (4*width*height)) rightPix = rightPix - (4*width*height);
+			pixels[rightPix] +=add;
+			pixels[rightPix+lD] -= add/dampener;
+			pixels[rightPix+rD] -= add/dampener;
 			break;
 		case 2:
-			var downPix = i + (width*4);
-			if (downPix > (4*width*height)) break;
-			pixels[downPix] += pixels[i] * spread;
-			//pixels[a + width] = 255;
+			if (downPix > (4*width*height)) downPix = downPix - (4*width*height);
+			pixels[downPix] += add;
+			pixels[downPix+lD] -= add/dampener;
+			pixels[downPix+rD] -= add/dampener;
 			break;
 		case 3:
-			var leftPix = i - 4;
 			if (leftPix < 0) leftPix = width*height*4 - leftPix;
-			pixels[leftPix] += pixels[i] * spread;
-			//pixels[a - 4] = 255;
+			pixels[leftPix] += add;
+			pixels[leftPix+lD] -= add/dampener;
+			pixels[leftPix+rD] -= add/dampener;
 			break;
 		
 	}

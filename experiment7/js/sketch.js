@@ -11,14 +11,17 @@ let canvasContainer;
 $.ajax({ 
     //url: "https://api.nasa.gov/planetary/apod", // API endpoint
     //data: { api_key: "DEMO_KEY"},      // Any data to send
-    url: "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/", // API endpoint
+    url: "https://api.nasa.gov/mars-photos/api/v1/rovers/", // API endpoint
     data: { earth_date:"2015-6-3", api_key: "15DbP4vpwqgDMels8bL25Oh7zC9LPz1SIgtV87WH"},      // Any data to send
     type: "GET",           // POST or GET request
     dataType : "json", // expected data type
     success: function(result){
         //$("body").html("<h1>"+result.title); 
-        //$("#canvas-container").html("<img src="+result.url+">");
-        $("#canvas-container").html("<p>" + result.rover.name + "</p>");
+        
+        //let test = result.photos;
+        //var photos = JSON.parse(result);
+        $("#canvas-container").html("<img src="+ result["photos"]["0"]["img_src"] +">");
+        //$("#canvas-container").html("<p>" + result.  + "</p>");
         //$("body").append("<p>"+result.explanation);
     },
     error: function(xhr,status,error) {
